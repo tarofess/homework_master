@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get_it/get_it.dart';
+import 'package:homework_master/service/navigation_service.dart';
 import 'package:homework_master/view/widget/common_async_widget';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'firebase_options.dart';
 
-void main() async {
+void main() {
+  setupGetIt();
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -16,16 +19,13 @@ class MyApp extends ConsumerWidget {
     final initialization = ref.watch(initializationProvider);
 
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       home: Scaffold(
         body: initialization.when(
-          data: (_) {
-            print('TopPageに移動');
-          },
+          data: (_) => AppRouter(),
           error: (error, stackTrace) => showInitializationrErrorMessage(
               context, ref, initializationProvider, error),
           loading: () => CommonAsyncWidget.showLoadingIndicator(),
@@ -72,6 +72,19 @@ class MyApp extends ConsumerWidget {
   }
 }
 
+class AppRouter extends StatelessWidget {
+  final navigationService = getIt<NavigationService>();
+
+  AppRouter({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routerConfig: navigationService.getRouter(),
+    );
+  }
+}
+
 Future<void> setupFirebase() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
@@ -86,3 +99,9 @@ Future<void> setupFirebase() async {
 final initializationProvider = FutureProvider<void>((ref) async {
   return await setupFirebase();
 });
+
+final getIt = GetIt.instance;
+
+void setupGetIt() {
+  getIt.registerLazySingleton(() => NavigationService());
+}
