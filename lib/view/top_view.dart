@@ -24,17 +24,20 @@ class TopView extends ConsumerWidget {
           children: [
             const Image(
               image: AssetImage('asset/image/warrior.png'),
-              width: 200,
-              height: 200,
+              width: 300,
+              height: 300,
             ),
             Text(
               '宿題マスター',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
-            Image.asset(
-              'asset/image/fire.gif',
-              height: 200,
-              width: 200,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 40),
+              child: Image.asset(
+                'asset/image/fire.gif',
+                height: 200,
+                width: 200,
+              ),
             ),
           ],
         ),

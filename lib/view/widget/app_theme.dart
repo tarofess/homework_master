@@ -8,7 +8,7 @@ class AppTheme {
         bodyLarge: TextStyle(
           fontFamily: 'MPLUSRounded1c',
           color: Colors.white,
-          fontSize: 32,
+          fontSize: 42,
           fontWeight: FontWeight.bold,
         ),
         bodyMedium: TextStyle(

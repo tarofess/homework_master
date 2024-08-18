@@ -96,20 +96,18 @@ class AppRouter extends StatelessWidget {
           pageBuilder: (BuildContext context, GoRouterState state) {
             return CustomTransitionPage(
               child: const RoomPreparationView(),
+              transitionDuration: const Duration(milliseconds: 800),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
-                const begin = Offset(0.0, 1.0);
-                const end = Offset.zero;
-                const curve = Curves.easeInOut;
+                var begin = const Offset(0.0, 1.0);
+                var end = Offset.zero;
+                var curve = Curves.fastLinearToSlowEaseIn;
 
                 var tween = Tween(begin: begin, end: end)
                     .chain(CurveTween(curve: curve));
                 var offsetAnimation = animation.drive(tween);
 
-                return SlideTransition(
-                  position: offsetAnimation,
-                  child: child,
-                );
+                return SlideTransition(position: offsetAnimation, child: child);
               },
             );
           },
