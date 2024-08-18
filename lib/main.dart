@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:homework_master/service/navigation_service.dart';
-import 'package:homework_master/view/widget/common_async_widget';
+import 'package:homework_master/view/widget/app_theme.dart';
+import 'package:homework_master/view/widget/common_async_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'firebase_options.dart';
 
@@ -19,10 +20,6 @@ class MyApp extends ConsumerWidget {
     final initialization = ref.watch(initializationProvider);
 
     return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
       home: Scaffold(
         body: initialization.when(
           data: (_) => AppRouter(),
@@ -81,6 +78,7 @@ class AppRouter extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: navigationService.getRouter(),
+      theme: AppTheme.defaultTheme(),
     );
   }
 }
