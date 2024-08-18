@@ -23,17 +23,17 @@ class TopView extends ConsumerWidget {
           children: [
             const Image(
               image: AssetImage('asset/image/warrior.png'),
-              width: 240,
-              height: 240,
+              width: 200,
+              height: 200,
             ),
             Text(
               '宿題マスター',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
-            Image.network(
-              'https://ugokawaii.com/wp-content/uploads/2023/09/fire.gif',
-              width: 240,
-              height: 240,
+            Image.asset(
+              'asset/image/fire.gif',
+              height: 200,
+              width: 200,
             ),
           ],
         ),
