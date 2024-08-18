@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TopView extends ConsumerWidget {
@@ -15,7 +16,7 @@ class TopView extends ConsumerWidget {
   Widget buildBody(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // 招待&待機画面に遷移
+        context.go('/room_preparation_view');
       },
       child: Center(
         child: Column(

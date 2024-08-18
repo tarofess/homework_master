@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
-import 'package:homework_master/service/navigation_service.dart';
+import 'package:go_router/go_router.dart';
+import 'package:homework_master/view/room_preparation_view.dart';
+import 'package:homework_master/view/top_view.dart';
 import 'package:homework_master/view/widget/app_theme.dart';
 import 'package:homework_master/view/widget/common_async_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -22,7 +24,7 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       home: Scaffold(
         body: initialization.when(
-          data: (_) => AppRouter(),
+          data: (_) => const AppRouter(),
           error: (error, stackTrace) => showInitializationrErrorMessage(
               context, ref, initializationProvider, error),
           loading: () => CommonAsyncWidget.showLoadingIndicator(),
@@ -70,16 +72,52 @@ class MyApp extends ConsumerWidget {
 }
 
 class AppRouter extends StatelessWidget {
-  final navigationService = getIt<NavigationService>();
-
-  AppRouter({super.key});
+  const AppRouter({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerConfig: navigationService.getRouter(),
+      routerConfig: getRouter(),
       theme: AppTheme.defaultTheme(),
     );
+  }
+
+  GoRouter getRouter() {
+    final GoRouter router = GoRouter(
+      routes: <RouteBase>[
+        GoRoute(
+          path: '/',
+          builder: (BuildContext context, GoRouterState state) {
+            return const TopView();
+          },
+        ),
+        GoRoute(
+          path: '/room_preparation_view',
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return CustomTransitionPage(
+              child: const RoomPreparationView(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                const begin = Offset(0.0, 1.0);
+                const end = Offset.zero;
+                const curve = Curves.easeInOut;
+
+                var tween = Tween(begin: begin, end: end)
+                    .chain(CurveTween(curve: curve));
+                var offsetAnimation = animation.drive(tween);
+
+                return SlideTransition(
+                  position: offsetAnimation,
+                  child: child,
+                );
+              },
+            );
+          },
+        ),
+      ],
+    );
+
+    return router;
   }
 }
 
@@ -100,6 +138,4 @@ final initializationProvider = FutureProvider<void>((ref) async {
 
 final getIt = GetIt.instance;
 
-void setupGetIt() {
-  getIt.registerLazySingleton(() => NavigationService());
-}
+void setupGetIt() {}
