@@ -26,7 +26,7 @@ class TopView extends ConsumerWidget {
         if (await vm.isFirstLaunch()) {
           if (context.mounted) await registerUsername(context, vm);
         } else {
-          if (context.mounted) context.go('/room_preparation_view');
+          if (context.mounted) context.goNamed('room_preparation_view');
         }
       },
       child: Center(
@@ -64,7 +64,7 @@ class TopView extends ConsumerWidget {
       if (context.mounted && isSuccess) {
         try {
           await vm.saveUsername(username);
-          if (context.mounted) context.go('/room_preparation_view');
+          if (context.mounted) context.goNamed('room_preparation_view');
         } catch (e) {
           if (context.mounted) {
             dialogService.showErrorDialog(context, '名前の保存中にエラーが発生しました');

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:homework_master/service/dialog_service.dart';
 import 'package:homework_master/view/room_preparation_view.dart';
 import 'package:homework_master/view/top_view.dart';
+import 'package:homework_master/view/waiting_view.dart';
 import 'package:homework_master/view/widget/app_theme.dart';
 import 'package:homework_master/view/widget/common_async_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -87,16 +88,18 @@ class AppRouter extends StatelessWidget {
     final GoRouter router = GoRouter(
       routes: <RouteBase>[
         GoRoute(
+          name: 'top_view',
           path: '/',
           builder: (BuildContext context, GoRouterState state) {
             return TopView();
           },
         ),
         GoRoute(
+          name: 'room_preparation_view',
           path: '/room_preparation_view',
           pageBuilder: (BuildContext context, GoRouterState state) {
             return CustomTransitionPage(
-              child: const RoomPreparationView(),
+              child: RoomPreparationView(),
               transitionDuration: const Duration(milliseconds: 800),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
@@ -111,6 +114,13 @@ class AppRouter extends StatelessWidget {
                 return SlideTransition(position: offsetAnimation, child: child);
               },
             );
+          },
+        ),
+        GoRoute(
+          name: 'waiting_view',
+          path: '/room_preparation_view/waiting_view',
+          builder: (BuildContext context, GoRouterState state) {
+            return const WaitingView();
           },
         ),
       ],

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:homework_master/main.dart';
+import 'package:homework_master/service/dialog_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class RoomPreparationView extends ConsumerWidget {
-  const RoomPreparationView({super.key});
+  final dialogService = getIt<DialogService>();
+
+  RoomPreparationView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,12 +47,21 @@ class RoomPreparationView extends ConsumerWidget {
             ),
             elevation: 12,
           ),
-          onPressed: () {},
-          child: Text(
-            '部屋を作る',
-            style:
-                Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 30),
-          ),
+          onPressed: () async {
+            try {
+              await makeRoom(context);
+            } catch (e) {
+              if (context.mounted) {
+                await dialogService.showErrorDialog(
+                    context, '部屋の作成に失敗しました\nもう一度お試しください');
+              }
+            }
+          },
+          child: Text('部屋を作る',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(fontSize: 30)),
         ),
       ),
     );
@@ -70,14 +84,37 @@ class RoomPreparationView extends ConsumerWidget {
             ),
             elevation: 12,
           ),
-          onPressed: () {},
-          child: Text(
-            '待機する',
-            style:
-                Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 30),
-          ),
+          onPressed: () async {
+            try {
+              await enterWaitingRoom(context);
+            } catch (e) {
+              if (context.mounted) {
+                await dialogService.showErrorDialog(
+                    context, 'そのような部屋は存在しません\n部屋名をもう一度確認してください');
+              }
+            }
+          },
+          child: Text('待機する',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(fontSize: 30)),
         ),
       ),
     );
+  }
+
+  Future<void> makeRoom(BuildContext context) async {
+    final isSuccess = await dialogService.showMakeRoomDialog(context);
+    if (isSuccess) {
+      if (context.mounted) context.pushNamed('waiting_view');
+    }
+  }
+
+  Future<void> enterWaitingRoom(BuildContext context) async {
+    final isSuccess = await dialogService.showEnterRoomNameDialog(context);
+    if (isSuccess) {
+      if (context.mounted) context.pushNamed('waiting_view');
+    }
   }
 }
