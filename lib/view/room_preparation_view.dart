@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:homework_master/main.dart';
 import 'package:homework_master/service/dialog_service.dart';
+import 'package:homework_master/viewmodel/room_preparation_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class RoomPreparationView extends ConsumerWidget {
@@ -11,25 +12,29 @@ class RoomPreparationView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final vm = ref.watch(roomPreparationViewModelProvider);
+
     return Scaffold(
       appBar: AppBar(toolbarHeight: 20),
-      body: buildBody(context),
+      body: buildBody(context, ref, vm),
     );
   }
 
-  Widget buildBody(BuildContext context) {
+  Widget buildBody(
+      BuildContext context, WidgetRef ref, RoomPreparationViewModel vm) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          buildMakeRoomButton(context),
-          buildWaitButton(context),
+          buildMakeRoomButton(context, ref, vm),
+          buildWaitButton(context, ref, vm),
         ],
       ),
     );
   }
 
-  Widget buildMakeRoomButton(BuildContext context) {
+  Widget buildMakeRoomButton(
+      BuildContext context, WidgetRef ref, RoomPreparationViewModel vm) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.only(
@@ -49,7 +54,8 @@ class RoomPreparationView extends ConsumerWidget {
           ),
           onPressed: () async {
             try {
-              await makeRoom(context);
+              ref.read(isOwnerProvider.notifier).state = true;
+              await makeRoom(context, vm);
             } catch (e) {
               if (context.mounted) {
                 await dialogService.showErrorDialog(
@@ -67,7 +73,8 @@ class RoomPreparationView extends ConsumerWidget {
     );
   }
 
-  Widget buildWaitButton(BuildContext context) {
+  Widget buildWaitButton(
+      BuildContext context, WidgetRef ref, RoomPreparationViewModel vm) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.only(left: 40.0, right: 40.0, bottom: 40.0),
@@ -86,7 +93,8 @@ class RoomPreparationView extends ConsumerWidget {
           ),
           onPressed: () async {
             try {
-              await enterWaitingRoom(context);
+              ref.read(isOwnerProvider.notifier).state = false;
+              await enterWaitingRoom(context, vm);
             } catch (e) {
               if (context.mounted) {
                 await dialogService.showErrorDialog(
@@ -104,15 +112,19 @@ class RoomPreparationView extends ConsumerWidget {
     );
   }
 
-  Future<void> makeRoom(BuildContext context) async {
-    final isSuccess = await dialogService.showMakeRoomDialog(context);
+  Future<void> makeRoom(
+      BuildContext context, RoomPreparationViewModel vm) async {
+    final isSuccess =
+        await dialogService.showMakeRoomDialog(context, vm.requestMakeRoom);
     if (isSuccess) {
       if (context.mounted) context.pushNamed('waiting_view');
     }
   }
 
-  Future<void> enterWaitingRoom(BuildContext context) async {
-    final isSuccess = await dialogService.showEnterRoomNameDialog(context);
+  Future<void> enterWaitingRoom(
+      BuildContext context, RoomPreparationViewModel vm) async {
+    final isSuccess = await dialogService.showEnterRoomNameDialog(
+        context, vm.requestEnterRoom);
     if (isSuccess) {
       if (context.mounted) context.pushNamed('waiting_view');
     }

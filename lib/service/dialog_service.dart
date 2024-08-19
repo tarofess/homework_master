@@ -12,9 +12,6 @@ class DialogService {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
               title: Text(
                 '名前を登録',
                 style: Theme.of(context).textTheme.bodyMedium,
@@ -78,9 +75,6 @@ class DialogService {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
           title: Text(
             name,
             style: Theme.of(context)
@@ -143,9 +137,6 @@ class DialogService {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
           title: const Text('エラーが発生しました'),
           content: Text(message),
           actions: [
@@ -171,16 +162,14 @@ class DialogService {
     );
   }
 
-  Future<bool> showMakeRoomDialog(BuildContext context) async {
+  Future<bool> showMakeRoomDialog(
+      BuildContext context, Future<void> Function() handleMakeRoom) async {
     final TextEditingController textController = TextEditingController();
 
     final result = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
           title: Text(
             '部屋の作成',
             style: Theme.of(context).textTheme.bodyMedium,
@@ -232,8 +221,8 @@ class DialogService {
                     ),
                   ),
                   onPressed: () async {
-                    // 部屋作成処理
-                    Navigator.of(context).pop(true);
+                    await handleMakeRoom();
+                    if (context.mounted) Navigator.of(context).pop(true);
                   },
                   child: Text(
                     '作成',
@@ -252,16 +241,14 @@ class DialogService {
     return result ?? false;
   }
 
-  Future<bool> showEnterRoomNameDialog(BuildContext context) async {
+  Future<bool> showEnterRoomNameDialog(
+      BuildContext context, Function handleEnterRoom) async {
     final TextEditingController textController = TextEditingController();
 
     final result = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
           title: Text(
             '入室',
             style: Theme.of(context).textTheme.bodyMedium,
@@ -274,7 +261,7 @@ class DialogService {
                 textAlign: TextAlign.center,
                 controller: textController,
                 decoration: InputDecoration(
-                  hintText: '部屋の名前を入力してください',
+                  hintText: '部屋のIDを入力してください',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                   ),
@@ -313,8 +300,8 @@ class DialogService {
                     ),
                   ),
                   onPressed: () async {
-                    // 入室処理
-                    Navigator.of(context).pop(true);
+                    await handleEnterRoom();
+                    if (context.mounted) Navigator.of(context).pop(true);
                   },
                   child: Text(
                     '送信',
