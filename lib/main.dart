@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:homework_master/service/dialog_service.dart';
 import 'package:homework_master/view/room_preparation_view.dart';
 import 'package:homework_master/view/top_view.dart';
 import 'package:homework_master/view/widget/app_theme.dart';
@@ -88,7 +89,7 @@ class AppRouter extends StatelessWidget {
         GoRoute(
           path: '/',
           builder: (BuildContext context, GoRouterState state) {
-            return const TopView();
+            return TopView();
           },
         ),
         GoRoute(
@@ -136,4 +137,6 @@ final initializationProvider = FutureProvider<void>((ref) async {
 
 final getIt = GetIt.instance;
 
-void setupGetIt() {}
+void setupGetIt() {
+  getIt.registerLazySingleton(() => DialogService());
+}
