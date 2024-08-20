@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:homework_master/main.dart';
 import 'package:homework_master/service/dialog_service.dart';
+import 'package:homework_master/view/widget/loading_overlay.dart';
 import 'package:homework_master/viewmodel/room_preparation_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -54,12 +55,12 @@ class RoomPreparationView extends ConsumerWidget {
           ),
           onPressed: () async {
             try {
-              ref.read(isOwnerProvider.notifier).state = true;
-              await makeRoom(context, vm);
+              await LoadingOverlay.of(context).during(
+                () => makeRoom(context, vm),
+              );
             } catch (e) {
               if (context.mounted) {
-                await dialogService.showErrorDialog(
-                    context, '部屋の作成に失敗しました\nもう一度お試しください');
+                await dialogService.showErrorDialog(context, e.toString());
               }
             }
           },
@@ -93,12 +94,12 @@ class RoomPreparationView extends ConsumerWidget {
           ),
           onPressed: () async {
             try {
-              ref.read(isOwnerProvider.notifier).state = false;
-              await enterWaitingRoom(context, vm);
+              await LoadingOverlay.of(context).during(
+                () => enterWaitingRoom(context, vm),
+              );
             } catch (e) {
               if (context.mounted) {
-                await dialogService.showErrorDialog(
-                    context, 'そのような部屋は存在しません\n部屋名をもう一度確認してください');
+                await dialogService.showErrorDialog(context, e.toString());
               }
             }
           },
@@ -114,10 +115,12 @@ class RoomPreparationView extends ConsumerWidget {
 
   Future<void> makeRoom(
       BuildContext context, RoomPreparationViewModel vm) async {
-    final isSuccess =
+    final roomNumber =
         await dialogService.showMakeRoomDialog(context, vm.requestMakeRoom);
-    if (isSuccess) {
-      if (context.mounted) context.pushNamed('waiting_view');
+    if (roomNumber.isNotEmpty) {
+      if (context.mounted) {
+        context.pushNamed('waiting_view', extra: roomNumber);
+      }
     }
   }
 
@@ -126,7 +129,9 @@ class RoomPreparationView extends ConsumerWidget {
     final isSuccess = await dialogService.showEnterRoomNameDialog(
         context, vm.requestEnterRoom);
     if (isSuccess) {
-      if (context.mounted) context.pushNamed('waiting_view');
+      if (context.mounted) {
+        context.pushNamed('waiting_view', extra: null);
+      }
     }
   }
 }

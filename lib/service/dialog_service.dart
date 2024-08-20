@@ -162,10 +162,8 @@ class DialogService {
     );
   }
 
-  Future<bool> showMakeRoomDialog(
-      BuildContext context, Future<void> Function() handleMakeRoom) async {
-    final TextEditingController textController = TextEditingController();
-
+  Future<String> showMakeRoomDialog(
+      BuildContext context, Future<String> Function() handleMakeRoom) async {
     final result = await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -175,22 +173,7 @@ class DialogService {
             style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                textAlign: TextAlign.center,
-                controller: textController,
-                decoration: InputDecoration(
-                  hintText: '部屋の名前を入力してください',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                ),
-                style: const TextStyle(color: Colors.black),
-              ),
-            ],
-          ),
+          content: const Text('新しく部屋を作成しますか？'),
           actions: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -203,9 +186,9 @@ class DialogService {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  onPressed: () => Navigator.of(context).pop(false),
+                  onPressed: () => Navigator.of(context).pop(''),
                   child: Text(
-                    'キャンセル',
+                    'いいえ',
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge!
@@ -221,11 +204,11 @@ class DialogService {
                     ),
                   ),
                   onPressed: () async {
-                    await handleMakeRoom();
-                    if (context.mounted) Navigator.of(context).pop(true);
+                    final roomNumber = await handleMakeRoom();
+                    if (context.mounted) Navigator.of(context).pop(roomNumber);
                   },
                   child: Text(
-                    '作成',
+                    '作成する',
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge!
@@ -238,11 +221,11 @@ class DialogService {
         );
       },
     );
-    return result ?? false;
+    return result ?? '';
   }
 
-  Future<bool> showEnterRoomNameDialog(
-      BuildContext context, Function handleEnterRoom) async {
+  Future<bool> showEnterRoomNameDialog(BuildContext context,
+      Future<bool> Function(String roomName) handleEnterRoom) async {
     final TextEditingController textController = TextEditingController();
 
     final result = await showDialog(
@@ -261,7 +244,9 @@ class DialogService {
                 textAlign: TextAlign.center,
                 controller: textController,
                 decoration: InputDecoration(
-                  hintText: '部屋のIDを入力してください',
+                  contentPadding:
+                      const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                  hintText: 'ルームナンバーを入力してください',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                   ),
@@ -300,8 +285,13 @@ class DialogService {
                     ),
                   ),
                   onPressed: () async {
-                    await handleEnterRoom();
-                    if (context.mounted) Navigator.of(context).pop(true);
+                    final isSuccess =
+                        await handleEnterRoom(textController.text);
+                    if (isSuccess) {
+                      if (context.mounted) Navigator.of(context).pop(true);
+                    } else {
+                      if (context.mounted) Navigator.of(context).pop(false);
+                    }
                   },
                   child: Text(
                     '送信',
