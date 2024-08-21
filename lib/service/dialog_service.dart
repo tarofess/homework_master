@@ -68,22 +68,22 @@ class DialogService {
     );
   }
 
-  Future<bool> showNameConfirmationDialog(
-      BuildContext context, String name) async {
+  Future<bool> showConfirmationDialog(
+      BuildContext context, String title, String content) async {
     final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            name,
+            title,
             style: Theme.of(context)
                 .textTheme
                 .bodyLarge!
                 .copyWith(color: Colors.black),
             textAlign: TextAlign.center,
           ),
-          content: const Text('一度登録すると変更できませんが、この名前でよろしいですか？'),
+          content: Text(content),
           actions: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

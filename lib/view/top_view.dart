@@ -62,8 +62,11 @@ class TopView extends ConsumerWidget {
   Future<void> registerUsername(BuildContext context, TopViewModel vm) async {
     final username = await dialogService.showNameRegistrationDialog(context);
     if (context.mounted) {
-      final isSuccess =
-          await dialogService.showNameConfirmationDialog(context, username!);
+      final isSuccess = await dialogService.showConfirmationDialog(
+        context,
+        username!,
+        '一度登録すると変更できませんが、この名前でよろしいですか？',
+      );
       if (context.mounted && isSuccess) {
         try {
           await sharedPreferencesService.saveUsername(username);

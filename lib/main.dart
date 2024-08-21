@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:homework_master/service/dialog_service.dart';
 import 'package:homework_master/service/shared_preferences_service.dart';
+import 'package:homework_master/view/homework_view.dart';
 import 'package:homework_master/view/room_preparation_view.dart';
 import 'package:homework_master/view/top_view.dart';
 import 'package:homework_master/view/waiting_view.dart';
@@ -123,6 +124,13 @@ class AppRouter extends StatelessWidget {
           builder: (BuildContext context, GoRouterState state) {
             final roomID = state.extra as String;
             return WaitingView(roomID: roomID);
+          },
+        ),
+        GoRoute(
+          name: 'homework_view',
+          path: '/room_preparation_view/waiting_view/homework_view',
+          builder: (BuildContext context, GoRouterState state) {
+            return HomeworkView();
           },
         ),
       ],

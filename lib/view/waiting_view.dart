@@ -27,32 +27,51 @@ class WaitingView extends ConsumerWidget {
 
   AppBar buildAppBar(BuildContext context, WaitingViewModel vm, bool isOwner) {
     return AppBar(
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () async {
-            bool isSuccess = false;
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () async {
+          bool isSuccess = false;
 
-            if (isOwner) {
-              isSuccess = await dialogService.showLeaveDialog(
-                context,
-                'この部屋を解散しますか？',
-                () => vm.closeRoom(roomID),
-              );
-            } else {
-              isSuccess = await dialogService.showLeaveDialog(
-                context,
-                'この部屋を退出しますか？',
-                () => vm.leaveRoom(roomID),
-              );
-            }
+          if (isOwner) {
+            isSuccess = await dialogService.showLeaveDialog(
+              context,
+              'この部屋を解散しますか？',
+              () => vm.closeRoom(roomID),
+            );
+          } else {
+            isSuccess = await dialogService.showLeaveDialog(
+              context,
+              'この部屋を退出しますか？',
+              () => vm.leaveRoom(roomID),
+            );
+          }
 
-            if (isSuccess) {
-              if (context.mounted) GoRouter.of(context).pop();
-            }
-          },
-        ),
-        title: Text('ルームID : $roomID'));
+          if (isSuccess) {
+            if (context.mounted) GoRouter.of(context).pop();
+          }
+        },
+      ),
+      title: Text('ルームID : $roomID'),
+      actions: [
+        if (isOwner)
+          IconButton(
+            icon: const Icon(Icons.check_circle_outline),
+            onPressed: () async {
+              final isSuccess = await dialogService.showConfirmationDialog(
+                context,
+                '準備OK？',
+                'メンバーがそろいましたか？\n準備が完了したらはいを押してください',
+              );
+              if (isSuccess) {
+                if (context.mounted) {
+                  context.goNamed('homework_view');
+                }
+              }
+            },
+          ),
+      ],
+    );
   }
 
   Widget buildBody(BuildContext context, WidgetRef ref) {
