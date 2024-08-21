@@ -37,13 +37,13 @@ class WaitingView extends ConsumerWidget {
               isSuccess = await dialogService.showLeaveDialog(
                 context,
                 'この部屋を解散しますか？',
-                () => vm.closeRoom(),
+                () => vm.closeRoom(roomID),
               );
             } else {
               isSuccess = await dialogService.showLeaveDialog(
                 context,
                 'この部屋を退出しますか？',
-                () => vm.leaveRoom(),
+                () => vm.leaveRoom(roomID),
               );
             }
 
@@ -58,16 +58,24 @@ class WaitingView extends ConsumerWidget {
   Widget buildBody(BuildContext context, WidgetRef ref) {
     final players = ref.watch(waitingPlayersProvider(roomID));
     return players.when(
-        data: (data) {
-          return ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(data[index].name),
-              );
-            },
-          );
-        },
+        data: (data) => data == null
+            ? const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('オーナーがこの部屋を解散しました'),
+                    Text('またのご利用お待ちしています'),
+                  ],
+                ),
+              )
+            : ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(data[index].name),
+                  );
+                },
+              ),
         error: (error, stackTrace) => Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

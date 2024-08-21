@@ -10,4 +10,14 @@ class SharedPreferencesService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('Username', username);
   }
+
+  Future<String?> getUserID() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('UserID');
+  }
+
+  Future<void> saveUserID(String userID) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('UserID', userID);
+  }
 }

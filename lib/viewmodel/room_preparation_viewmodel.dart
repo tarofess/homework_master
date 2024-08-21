@@ -16,7 +16,9 @@ class RoomPreparationViewModel {
 
     final username = await sharedPreferencesService.getUsername();
     final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
-    await ref.child(roomID).child('players').push().set(username);
+    final userID = ref.child(roomID).child('players').push();
+    await userID.set(username);
+    await sharedPreferencesService.saveUserID(userID.key!);
     return roomID;
   }
 
@@ -27,7 +29,9 @@ class RoomPreparationViewModel {
     if (snapshot.exists) {
       final username = await sharedPreferencesService.getUsername();
       final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
-      await ref.child(roomID).child('players').push().set(username);
+      final userID = ref.child(roomID).child('players').push();
+      await userID.set(username);
+      await sharedPreferencesService.saveUserID(userID.key!);
       return true;
     } else {
       return false;

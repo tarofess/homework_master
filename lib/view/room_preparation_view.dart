@@ -105,7 +105,7 @@ class RoomPreparationView extends ConsumerWidget {
               }
             }
           },
-          child: Text('待機する',
+          child: Text('入室する',
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
