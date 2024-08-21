@@ -121,7 +121,7 @@ class AppRouter extends StatelessWidget {
           name: 'waiting_view',
           path: '/room_preparation_view/waiting_view',
           builder: (BuildContext context, GoRouterState state) {
-            final roomID = state.extra as String?;
+            final roomID = state.extra as String;
             return WaitingView(roomID: roomID);
           },
         ),

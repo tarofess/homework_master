@@ -224,7 +224,7 @@ class DialogService {
     return result ?? '';
   }
 
-  Future<bool> showEnterRoomNameDialog(BuildContext context,
+  Future<String> showEnterRoomNameDialog(BuildContext context,
       Future<bool> Function(String roomName) handleEnterRoom) async {
     final TextEditingController textController = TextEditingController();
 
@@ -267,7 +267,7 @@ class DialogService {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  onPressed: () => Navigator.of(context).pop(false),
+                  onPressed: () => Navigator.of(context).pop(''),
                   child: Text(
                     'キャンセル',
                     style: Theme.of(context)
@@ -288,9 +288,11 @@ class DialogService {
                     final isSuccess =
                         await handleEnterRoom(textController.text);
                     if (isSuccess) {
-                      if (context.mounted) Navigator.of(context).pop(true);
+                      if (context.mounted) {
+                        Navigator.of(context).pop(textController.text);
+                      }
                     } else {
-                      if (context.mounted) Navigator.of(context).pop(false);
+                      if (context.mounted) Navigator.of(context).pop('');
                     }
                   },
                   child: Text(
@@ -307,6 +309,6 @@ class DialogService {
         );
       },
     );
-    return result ?? false;
+    return result ?? '';
   }
 }
