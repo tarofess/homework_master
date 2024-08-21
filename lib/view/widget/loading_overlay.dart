@@ -20,7 +20,7 @@ class LoadingOverlay {
             GestureDetector(
               onTap: () {},
               child: Container(
-                color: Colors.transparent,
+                color: Colors.grey.withOpacity(0.5),
                 width: double.infinity,
                 height: double.infinity,
               ),

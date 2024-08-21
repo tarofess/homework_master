@@ -1,16 +1,13 @@
+import 'package:homework_master/main.dart';
+import 'package:homework_master/service/shared_preferences_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class TopViewModel {
-  Future<bool> isFirstLaunch() async {
-    final prefs = await SharedPreferences.getInstance();
-    final username = prefs.getString('Username');
-    return username == null ? true : false;
-  }
+  final sharedPreferencesService = getIt<SharedPreferencesService>();
 
-  Future<void> saveUsername(String username) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('Username', username);
+  Future<bool> isFirstLaunch() async {
+    final username = await sharedPreferencesService.getUsername();
+    return username == null ? true : false;
   }
 }
 

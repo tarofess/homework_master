@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:homework_master/service/dialog_service.dart';
+import 'package:homework_master/service/shared_preferences_service.dart';
 import 'package:homework_master/view/room_preparation_view.dart';
 import 'package:homework_master/view/top_view.dart';
 import 'package:homework_master/view/waiting_view.dart';
@@ -120,8 +121,8 @@ class AppRouter extends StatelessWidget {
           name: 'waiting_view',
           path: '/room_preparation_view/waiting_view',
           builder: (BuildContext context, GoRouterState state) {
-            final roomNumber = state.extra as String?;
-            return WaitingView(roomNumber: roomNumber);
+            final roomID = state.extra as String?;
+            return WaitingView(roomID: roomID);
           },
         ),
       ],
@@ -149,5 +150,6 @@ final initializationProvider = FutureProvider<void>((ref) async {
 final getIt = GetIt.instance;
 
 void setupGetIt() {
+  getIt.registerLazySingleton(() => SharedPreferencesService());
   getIt.registerLazySingleton(() => DialogService());
 }

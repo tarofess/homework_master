@@ -204,8 +204,8 @@ class DialogService {
                     ),
                   ),
                   onPressed: () async {
-                    final roomNumber = await handleMakeRoom();
-                    if (context.mounted) Navigator.of(context).pop(roomNumber);
+                    final roomID = await handleMakeRoom();
+                    if (context.mounted) Navigator.of(context).pop(roomID);
                   },
                   child: Text(
                     '作成する',
@@ -246,7 +246,7 @@ class DialogService {
                 decoration: InputDecoration(
                   contentPadding:
                       const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                  hintText: 'ルームナンバーを入力してください',
+                  hintText: 'ルームIDを入力してください',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                   ),

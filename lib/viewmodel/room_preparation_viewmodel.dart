@@ -1,32 +1,33 @@
 import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:homework_master/main.dart';
+import 'package:homework_master/service/shared_preferences_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class RoomPreparationViewModel {
-  Future<String> requestMakeRoom() async {
-    String roomNumber;
-    do {
-      roomNumber = generateRoomID();
-    } while (await isExistRoomID(roomNumber));
+  final sharedPreferencesService = getIt<SharedPreferencesService>();
 
-    final DatabaseReference ref = FirebaseDatabase.instance.ref("room");
-    await ref.push().set({'roomNumber': roomNumber});
-    return roomNumber;
+  Future<String> requestMakeRoom() async {
+    String roomID;
+    do {
+      roomID = generateRoomID();
+    } while (await isExistRoomID(roomID));
+
+    final username = await sharedPreferencesService.getUsername();
+    final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
+    await ref.child(roomID).child('players').push().set(username);
+    return roomID;
   }
 
-  Future<bool> requestEnterRoom(String roomNumber) async {
-    final DatabaseReference database = FirebaseDatabase.instance.ref();
-    final query =
-        database.child('room').orderByChild('roomNumber').equalTo(roomNumber);
-    final snapshot = await query.get();
+  Future<bool> requestEnterRoom(String roomID) async {
+    final DatabaseReference ref = FirebaseDatabase.instance.ref();
+    final snapshot = await ref.child('room').orderByKey().equalTo(roomID).get();
 
     if (snapshot.exists) {
-      final data = Map<String, dynamic>.from(snapshot.value as Map);
-      data.forEach((roomId, roomData) {
-        final typedRoomData = Map<String, dynamic>.from(roomData);
-        final roomNumber = typedRoomData['roomNumber'];
-      });
+      final username = await sharedPreferencesService.getUsername();
+      final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
+      await ref.child(roomID).child('players').push().set(username);
       return true;
     } else {
       return false;

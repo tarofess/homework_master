@@ -115,11 +115,11 @@ class RoomPreparationView extends ConsumerWidget {
 
   Future<void> makeRoom(
       BuildContext context, RoomPreparationViewModel vm) async {
-    final roomNumber =
+    final roomID =
         await dialogService.showMakeRoomDialog(context, vm.requestMakeRoom);
-    if (roomNumber.isNotEmpty) {
+    if (roomID.isNotEmpty) {
       if (context.mounted) {
-        context.pushNamed('waiting_view', extra: roomNumber);
+        context.pushNamed('waiting_view', extra: roomID);
       }
     }
   }

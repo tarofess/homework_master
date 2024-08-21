@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:homework_master/main.dart';
 import 'package:homework_master/service/dialog_service.dart';
+import 'package:homework_master/service/shared_preferences_service.dart';
 import 'package:homework_master/viewmodel/top_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TopView extends ConsumerWidget {
+  final sharedPreferencesService = getIt<SharedPreferencesService>();
   final dialogService = GetIt.instance<DialogService>();
 
   TopView({super.key});
@@ -63,7 +66,7 @@ class TopView extends ConsumerWidget {
           await dialogService.showNameConfirmationDialog(context, username!);
       if (context.mounted && isSuccess) {
         try {
-          await vm.saveUsername(username);
+          await sharedPreferencesService.saveUsername(username);
           if (context.mounted) context.goNamed('room_preparation_view');
         } catch (e) {
           if (context.mounted) {
