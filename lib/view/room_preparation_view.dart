@@ -55,6 +55,7 @@ class RoomPreparationView extends ConsumerWidget {
           ),
           onPressed: () async {
             try {
+              ref.read(isOwnerProvider.notifier).state = true;
               await LoadingOverlay.of(context).during(
                 () => makeRoom(context, vm),
               );
@@ -94,6 +95,7 @@ class RoomPreparationView extends ConsumerWidget {
           ),
           onPressed: () async {
             try {
+              ref.read(isOwnerProvider.notifier).state = false;
               await LoadingOverlay.of(context).during(
                 () => enterWaitingRoom(context, vm),
               );
@@ -135,3 +137,5 @@ class RoomPreparationView extends ConsumerWidget {
     }
   }
 }
+
+final isOwnerProvider = StateProvider<bool>((ref) => false);
