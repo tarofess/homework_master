@@ -4,7 +4,7 @@ class RoomRepositoryService {
   Future<void> createRoom(String roomID) async {
     final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
     await ref.child(roomID).set({
-      'created_at': ServerValue.timestamp,
+      'createdAt': ServerValue.timestamp,
     });
   }
 

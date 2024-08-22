@@ -1,11 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'players.freezed.dart';
+part 'player.freezed.dart';
 
 @freezed
-class Players with _$Players {
-  const factory Players({
+class Player with _$Player {
+  const factory Player({
     required String id,
     required String name,
-  }) = _Players;
+  }) = _Player;
 }

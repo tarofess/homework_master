@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'players.dart';
+part of 'player.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,26 +15,26 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$Players {
+mixin _$Player {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $PlayersCopyWith<Players> get copyWith => throw _privateConstructorUsedError;
+  $PlayerCopyWith<Player> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $PlayersCopyWith<$Res> {
-  factory $PlayersCopyWith(Players value, $Res Function(Players) then) =
-      _$PlayersCopyWithImpl<$Res, Players>;
+abstract class $PlayerCopyWith<$Res> {
+  factory $PlayerCopyWith(Player value, $Res Function(Player) then) =
+      _$PlayerCopyWithImpl<$Res, Player>;
   @useResult
   $Res call({String id, String name});
 }
 
 /// @nodoc
-class _$PlayersCopyWithImpl<$Res, $Val extends Players>
-    implements $PlayersCopyWith<$Res> {
-  _$PlayersCopyWithImpl(this._value, this._then);
+class _$PlayerCopyWithImpl<$Res, $Val extends Player>
+    implements $PlayerCopyWith<$Res> {
+  _$PlayerCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -61,21 +61,21 @@ class _$PlayersCopyWithImpl<$Res, $Val extends Players>
 }
 
 /// @nodoc
-abstract class _$$PlayersImplCopyWith<$Res> implements $PlayersCopyWith<$Res> {
-  factory _$$PlayersImplCopyWith(
-          _$PlayersImpl value, $Res Function(_$PlayersImpl) then) =
-      __$$PlayersImplCopyWithImpl<$Res>;
+abstract class _$$PlayerImplCopyWith<$Res> implements $PlayerCopyWith<$Res> {
+  factory _$$PlayerImplCopyWith(
+          _$PlayerImpl value, $Res Function(_$PlayerImpl) then) =
+      __$$PlayerImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String id, String name});
 }
 
 /// @nodoc
-class __$$PlayersImplCopyWithImpl<$Res>
-    extends _$PlayersCopyWithImpl<$Res, _$PlayersImpl>
-    implements _$$PlayersImplCopyWith<$Res> {
-  __$$PlayersImplCopyWithImpl(
-      _$PlayersImpl _value, $Res Function(_$PlayersImpl) _then)
+class __$$PlayerImplCopyWithImpl<$Res>
+    extends _$PlayerCopyWithImpl<$Res, _$PlayerImpl>
+    implements _$$PlayerImplCopyWith<$Res> {
+  __$$PlayerImplCopyWithImpl(
+      _$PlayerImpl _value, $Res Function(_$PlayerImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -84,7 +84,7 @@ class __$$PlayersImplCopyWithImpl<$Res>
     Object? id = null,
     Object? name = null,
   }) {
-    return _then(_$PlayersImpl(
+    return _then(_$PlayerImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -99,8 +99,8 @@ class __$$PlayersImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$PlayersImpl implements _Players {
-  const _$PlayersImpl({required this.id, required this.name});
+class _$PlayerImpl implements _Player {
+  const _$PlayerImpl({required this.id, required this.name});
 
   @override
   final String id;
@@ -109,14 +109,14 @@ class _$PlayersImpl implements _Players {
 
   @override
   String toString() {
-    return 'Players(id: $id, name: $name)';
+    return 'Player(id: $id, name: $name)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$PlayersImpl &&
+            other is _$PlayerImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name));
   }
@@ -127,13 +127,13 @@ class _$PlayersImpl implements _Players {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$PlayersImplCopyWith<_$PlayersImpl> get copyWith =>
-      __$$PlayersImplCopyWithImpl<_$PlayersImpl>(this, _$identity);
+  _$$PlayerImplCopyWith<_$PlayerImpl> get copyWith =>
+      __$$PlayerImplCopyWithImpl<_$PlayerImpl>(this, _$identity);
 }
 
-abstract class _Players implements Players {
-  const factory _Players(
-      {required final String id, required final String name}) = _$PlayersImpl;
+abstract class _Player implements Player {
+  const factory _Player(
+      {required final String id, required final String name}) = _$PlayerImpl;
 
   @override
   String get id;
@@ -141,6 +141,6 @@ abstract class _Players implements Players {
   String get name;
   @override
   @JsonKey(ignore: true)
-  _$$PlayersImplCopyWith<_$PlayersImpl> get copyWith =>
+  _$$PlayerImplCopyWith<_$PlayerImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
