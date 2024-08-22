@@ -2,22 +2,23 @@ import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:homework_master/main.dart';
+import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/service/shared_preferences_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class RoomPreparationViewModel {
   final sharedPreferencesService = getIt<SharedPreferencesService>();
+  final roomRepositoryService = getIt<RoomRepositoryService>();
 
   Future<String> requestMakeRoom() async {
     String roomID;
     do {
       roomID = generateRoomID();
-    } while (await isExistRoomID(roomID));
+    } while (await roomRepositoryService.isExistRoomID(roomID));
 
+    await roomRepositoryService.createRoom(roomID);
     final username = await sharedPreferencesService.getUsername();
-    final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
-    final userID = ref.child(roomID).child('players').push();
-    await userID.set(username);
+    final userID = await roomRepositoryService.addPlayer(roomID, username!);
     await sharedPreferencesService.saveUserID(userID.key!);
     return roomID;
   }
@@ -28,9 +29,7 @@ class RoomPreparationViewModel {
 
     if (snapshot.exists) {
       final username = await sharedPreferencesService.getUsername();
-      final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
-      final userID = ref.child(roomID).child('players').push();
-      await userID.set(username);
+      final userID = await roomRepositoryService.addPlayer(roomID, username!);
       await sharedPreferencesService.saveUserID(userID.key!);
       return true;
     } else {
@@ -44,16 +43,6 @@ class RoomPreparationViewModel {
 
     return List.generate(4, (index) => chars[random.nextInt(chars.length)])
         .join();
-  }
-
-  Future<bool> isExistRoomID(String roomID) async {
-    final ref = FirebaseDatabase.instance.ref('room/$roomID');
-    final snapshot = await ref.get();
-    if (snapshot.exists) {
-      return true;
-    } else {
-      return false;
-    }
   }
 }
 

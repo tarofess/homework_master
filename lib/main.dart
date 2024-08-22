@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:homework_master/service/dialog_service.dart';
+import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/service/shared_preferences_service.dart';
 import 'package:homework_master/view/homework_view.dart';
 import 'package:homework_master/view/room_preparation_view.dart';
@@ -160,4 +161,5 @@ final getIt = GetIt.instance;
 void setupGetIt() {
   getIt.registerLazySingleton(() => SharedPreferencesService());
   getIt.registerLazySingleton(() => DialogService());
+  getIt.registerLazySingleton(() => RoomRepositoryService());
 }

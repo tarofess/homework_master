@@ -1,22 +1,21 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:homework_master/main.dart';
+import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/service/shared_preferences_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class WaitingViewModel {
   final sharedPreferencesService = getIt<SharedPreferencesService>();
+  final roomRepositoryService = getIt<RoomRepositoryService>();
 
   Future<void> closeRoom(String roomID) async {
-    final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
-    await ref.child(roomID).remove();
+    await roomRepositoryService.deleteRoom(roomID);
   }
 
   Future<void> leaveRoom(String roomID) async {
     final userID = await sharedPreferencesService.getUserID();
     if (userID == null) return;
 
-    final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
-    await ref.child(roomID).child('players').child(userID).remove();
+    await roomRepositoryService.removePlayer(roomID, userID);
   }
 }
 

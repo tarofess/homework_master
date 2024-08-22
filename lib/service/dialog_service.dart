@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:homework_master/view/widget/loading_overlay.dart';
 
 class DialogService {
   Future<String?> showNameRegistrationDialog(BuildContext context) async {
@@ -204,7 +205,8 @@ class DialogService {
                     ),
                   ),
                   onPressed: () async {
-                    final roomID = await handleMakeRoom();
+                    final roomID = await LoadingOverlay.of(context)
+                        .during(() => handleMakeRoom());
                     if (context.mounted) Navigator.of(context).pop(roomID);
                   },
                   child: Text(
@@ -285,8 +287,8 @@ class DialogService {
                     ),
                   ),
                   onPressed: () async {
-                    final isSuccess =
-                        await handleEnterRoom(textController.text);
+                    final isSuccess = await LoadingOverlay.of(context)
+                        .during(() => handleEnterRoom(textController.text));
                     if (isSuccess) {
                       if (context.mounted) {
                         Navigator.of(context).pop(textController.text);
@@ -350,7 +352,8 @@ class DialogService {
                     ),
                   ),
                   onPressed: () async {
-                    await leaveAction();
+                    await LoadingOverlay.of(context)
+                        .during(() => leaveAction());
                     if (context.mounted) Navigator.of(context).pop(true);
                   },
                   child: const Text(

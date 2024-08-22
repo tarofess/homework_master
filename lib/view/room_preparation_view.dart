@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:homework_master/main.dart';
 import 'package:homework_master/service/dialog_service.dart';
-import 'package:homework_master/view/widget/loading_overlay.dart';
 import 'package:homework_master/viewmodel/room_preparation_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -56,9 +55,7 @@ class RoomPreparationView extends ConsumerWidget {
           onPressed: () async {
             try {
               ref.read(isOwnerProvider.notifier).state = true;
-              await LoadingOverlay.of(context).during(
-                () => makeRoom(context, vm),
-              );
+              makeRoom(context, vm);
             } catch (e) {
               if (context.mounted) {
                 await dialogService.showErrorDialog(context, e.toString());
@@ -96,9 +93,7 @@ class RoomPreparationView extends ConsumerWidget {
           onPressed: () async {
             try {
               ref.read(isOwnerProvider.notifier).state = false;
-              await LoadingOverlay.of(context).during(
-                () => enterWaitingRoom(context, vm),
-              );
+              enterWaitingRoom(context, vm);
             } catch (e) {
               if (context.mounted) {
                 await dialogService.showErrorDialog(context, e.toString());
