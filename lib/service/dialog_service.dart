@@ -226,92 +226,107 @@ class DialogService {
     return result ?? '';
   }
 
-  Future<String> showEnterRoomNameDialog(BuildContext context,
+  Future<String?> showEnterRoomNameDialog(BuildContext context,
       Future<bool> Function(String roomName) handleEnterRoom) async {
     final TextEditingController textController = TextEditingController();
+    bool isButtonEnabled = false;
 
-    final result = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            '入室',
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                textAlign: TextAlign.center,
-                controller: textController,
-                decoration: InputDecoration(
-                  contentPadding:
-                      const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                  hintText: 'ルームIDを入力してください',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
+    return await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: Text(
+                  '入室',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
                 ),
-                style: const TextStyle(color: Colors.black),
-              ),
-            ],
-          ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green[500],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      textAlign: TextAlign.center,
+                      controller: textController,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.only(
+                            left: 20, right: 20, bottom: 20),
+                        hintText: 'ルームIDを入力してください',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
+                      style: const TextStyle(color: Colors.black),
+                      onChanged: (value) {
+                        setState(() {
+                          isButtonEnabled = value.isNotEmpty;
+                        });
+                      },
                     ),
-                  ),
-                  onPressed: () => Navigator.of(context).pop(''),
-                  child: Text(
-                    'キャンセル',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontSize: 18),
-                  ),
+                  ],
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green[500],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
+                actions: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.green[500],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        onPressed: () => Navigator.of(context).pop(null),
+                        child: Text(
+                          'キャンセル',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontSize: 18),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.green[500],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        onPressed: isButtonEnabled
+                            ? () async {
+                                final isSuccess =
+                                    await LoadingOverlay.of(context).during(
+                                  () => handleEnterRoom(textController.text),
+                                );
+                                if (isSuccess) {
+                                  if (context.mounted) {
+                                    Navigator.of(context)
+                                        .pop(textController.text);
+                                  }
+                                } else {
+                                  if (context.mounted) {
+                                    Navigator.of(context).pop('');
+                                  }
+                                }
+                              }
+                            : null,
+                        child: Text(
+                          '送信',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontSize: 18),
+                        ),
+                      ),
+                    ],
                   ),
-                  onPressed: () async {
-                    final isSuccess = await LoadingOverlay.of(context)
-                        .during(() => handleEnterRoom(textController.text));
-                    if (isSuccess) {
-                      if (context.mounted) {
-                        Navigator.of(context).pop(textController.text);
-                      }
-                    } else {
-                      if (context.mounted) Navigator.of(context).pop('');
-                    }
-                  },
-                  child: Text(
-                    '送信',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontSize: 18),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-    return result ?? '';
+                ],
+              );
+            },
+          );
+        });
   }
 
   Future<bool> showLeaveDialog(

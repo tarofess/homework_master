@@ -55,7 +55,7 @@ class RoomPreparationView extends ConsumerWidget {
           onPressed: () async {
             try {
               ref.read(isOwnerProvider.notifier).state = true;
-              makeRoom(context, vm);
+              await makeRoom(context, vm);
             } catch (e) {
               if (context.mounted) {
                 await dialogService.showErrorDialog(context, e.toString());
@@ -93,7 +93,7 @@ class RoomPreparationView extends ConsumerWidget {
           onPressed: () async {
             try {
               ref.read(isOwnerProvider.notifier).state = false;
-              enterWaitingRoom(context, vm);
+              await enterWaitingRoom(context, vm);
             } catch (e) {
               if (context.mounted) {
                 await dialogService.showErrorDialog(context, e.toString());
@@ -125,9 +125,14 @@ class RoomPreparationView extends ConsumerWidget {
       BuildContext context, RoomPreparationViewModel vm) async {
     final roomID = await dialogService.showEnterRoomNameDialog(
         context, vm.requestEnterRoom);
-    if (roomID.isNotEmpty) {
+
+    if (roomID != null && roomID.isNotEmpty) {
       if (context.mounted) {
         context.pushNamed('waiting_view', extra: roomID);
+      }
+    } else if (roomID != null && roomID.isEmpty) {
+      if (context.mounted) {
+        dialogService.showErrorDialog(context, 'そのような部屋は見つかりませんでした');
       }
     }
   }

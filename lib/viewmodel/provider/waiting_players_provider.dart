@@ -7,8 +7,11 @@ final waitingPlayersProvider =
     StreamProvider.family<List<Player>?, String>((ref, roomID) {
   final ref = FirebaseDatabase.instance.ref('room/$roomID');
   return ref.onValue.map((event) {
-    final data = event.snapshot.value as Map<Object?, Object?>?;
+    if (event.snapshot.value == null) {
+      return null;
+    }
 
+    final data = event.snapshot.value as Map<Object?, Object?>?;
     final Map<String, dynamic> jsonData = data!.map(
       (key, value) => MapEntry(key.toString(), value),
     );
