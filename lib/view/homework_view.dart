@@ -16,21 +16,43 @@ class HomeworkView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final vm = ref.watch(homeworkViewModelProvider);
     final isOwner = ref.watch(ownerCheckProvider);
+    final showReadyAnimation = useState(false);
+    final showGoAnimation = useState(false);
 
     useEffect(() {
-      void showAnimation() async {
+      void animationSequence() async {
         await Future.delayed(const Duration(seconds: 1));
-        const HomeworkStartAnimation(text: 'Ready Go!');
-        await Future.delayed(const Duration(seconds: 1));
+        showReadyAnimation.value = true;
+        await Future.delayed(const Duration(seconds: 2));
+        showReadyAnimation.value = false;
+        showGoAnimation.value = true;
+        await Future.delayed(const Duration(seconds: 3));
+        showGoAnimation.value = false;
       }
 
-      showAnimation();
+      animationSequence();
       return null;
     }, []);
 
     return Scaffold(
       appBar: buildAppBar(),
-      body: buildBody(),
+      body: Stack(
+        children: [
+          buildBody(),
+          if (showReadyAnimation.value)
+            const HomeworkStartAnimation(
+              text: 'Ready...',
+              fontSize: 40,
+              duration: 1,
+            ),
+          if (showGoAnimation.value)
+            const HomeworkStartAnimation(
+              text: 'Go!',
+              fontSize: 160,
+              duration: 0,
+            ),
+        ],
+      ),
     );
   }
 
