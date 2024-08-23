@@ -6,6 +6,7 @@ import 'package:homework_master/view/widget/homework_start_animation.dart';
 import 'package:homework_master/view/widget/homework_timer.dart';
 import 'package:homework_master/view/widget/loading_overlay.dart';
 import 'package:homework_master/viewmodel/homework_viewmodel.dart';
+import 'package:homework_master/viewmodel/provider/homework_timer_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomeworkView extends HookConsumerWidget {
@@ -17,21 +18,22 @@ class HomeworkView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final vm = ref.watch(homeworkViewModelProvider);
     final isEnableFinishButton = useState(false);
-    final isShowReadyAnimation = useState(false);
-    final isShowGoAnimation = useState(false);
+    final isShowReadyTextAnimation = useState(false);
+    final isShowGoTextAnimation = useState(false);
     final isShowTimer = useState(false);
 
     useEffect(() {
       void animationSequence() async {
         await Future.delayed(const Duration(seconds: 1));
-        isShowReadyAnimation.value = true;
+        isShowReadyTextAnimation.value = true;
         await Future.delayed(const Duration(seconds: 2));
         isEnableFinishButton.value = true;
-        isShowReadyAnimation.value = false;
-        isShowGoAnimation.value = true;
+        isShowReadyTextAnimation.value = false;
+        isShowGoTextAnimation.value = true;
         isShowTimer.value = true;
+        ref.read(homeworkTimerProvider.notifier).startTimer();
         await Future.delayed(const Duration(seconds: 3));
-        isShowGoAnimation.value = false;
+        isShowGoTextAnimation.value = false;
       }
 
       animationSequence();
@@ -44,8 +46,8 @@ class HomeworkView extends HookConsumerWidget {
       vm,
       ref,
       isEnableFinishButton.value,
-      isShowReadyAnimation.value,
-      isShowGoAnimation.value,
+      isShowReadyTextAnimation.value,
+      isShowGoTextAnimation.value,
       isShowTimer.value,
     ));
   }
@@ -55,8 +57,8 @@ class HomeworkView extends HookConsumerWidget {
     HomeworkViewModel vm,
     WidgetRef ref,
     bool isEnableFinishButton,
-    bool isShowReadyAnimation,
-    bool isShowGoAnimation,
+    bool isShowReadyTextAnimation,
+    bool isShowGoTextAnimation,
     bool isShowTimer,
   ) {
     return Stack(
@@ -82,6 +84,7 @@ class HomeworkView extends HookConsumerWidget {
                     try {
                       await LoadingOverlay.of(context)
                           .during(() => vm.finishedHomework());
+                      ref.read(homeworkTimerProvider.notifier).stopTimer();
                     } catch (e) {
                       if (context.mounted) {
                         await dialogService.showErrorDialog(
@@ -106,13 +109,13 @@ class HomeworkView extends HookConsumerWidget {
             bottom: 50,
             child: Center(child: HomeworkTimer()),
           ),
-        if (isShowReadyAnimation)
+        if (isShowReadyTextAnimation)
           const HomeworkStartAnimation(
             text: 'Ready...',
             fontSize: 40,
             duration: 1,
           ),
-        if (isShowGoAnimation)
+        if (isShowGoTextAnimation)
           const HomeworkStartAnimation(
             text: 'Go!',
             fontSize: 160,
