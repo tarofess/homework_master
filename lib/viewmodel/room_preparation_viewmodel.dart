@@ -5,6 +5,7 @@ import 'package:homework_master/main.dart';
 import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/service/shared_preferences_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 class RoomPreparationViewModel {
   final sharedPreferencesService = getIt<SharedPreferencesService>();
@@ -17,9 +18,7 @@ class RoomPreparationViewModel {
     } while (await roomRepositoryService.isExistRoomID(roomID));
 
     await roomRepositoryService.createRoom(roomID);
-    final username = await sharedPreferencesService.getUsername();
-    final userID = await roomRepositoryService.addPlayer(roomID, username!);
-    await sharedPreferencesService.saveUserID(userID.key!);
+    await addPlayerToRoom(roomID);
     return roomID;
   }
 
@@ -28,19 +27,23 @@ class RoomPreparationViewModel {
     final snapshot = await ref.child('room').orderByKey().equalTo(roomID).get();
 
     if (snapshot.exists) {
-      final username = await sharedPreferencesService.getUsername();
-      final userID = await roomRepositoryService.addPlayer(roomID, username!);
-      await sharedPreferencesService.saveUserID(userID.key!);
+      await addPlayerToRoom(roomID);
       return true;
     } else {
       return false;
     }
   }
 
+  Future<void> addPlayerToRoom(String roomID) async {
+    final username = await sharedPreferencesService.getUsername();
+    final userID = const Uuid().v4();
+    await roomRepositoryService.addPlayer(roomID, username!, userID);
+    await sharedPreferencesService.saveUserID(userID);
+  }
+
   String generateRoomID() {
     const String chars = '123456789abcdefghijklmnopqrstuvwxyz';
     Random random = Random();
-
     return List.generate(4, (index) => chars[random.nextInt(chars.length)])
         .join();
   }

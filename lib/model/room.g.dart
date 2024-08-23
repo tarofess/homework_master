@@ -8,7 +8,10 @@ part of 'room.dart';
 
 _$RoomImpl _$$RoomImplFromJson(Map<String, dynamic> json) => _$RoomImpl(
       createdAt: (json['createdAt'] as num).toInt(),
-      players: Map<String, String>.from(json['players'] as Map),
+      status: json['status'] as String,
+      players: (json['players'] as List<dynamic>)
+          .map((e) => Player.fromJson(e as Map<String, dynamic>))
+          .toList(),
       homework: json['homework'] == null
           ? null
           : Homework.fromJson(json['homework'] as Map<String, dynamic>),
@@ -17,6 +20,7 @@ _$RoomImpl _$$RoomImplFromJson(Map<String, dynamic> json) => _$RoomImpl(
 Map<String, dynamic> _$$RoomImplToJson(_$RoomImpl instance) =>
     <String, dynamic>{
       'createdAt': instance.createdAt,
+      'status': instance.status,
       'players': instance.players,
       'homework': instance.homework,
     };

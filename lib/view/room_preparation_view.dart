@@ -27,7 +27,7 @@ class RoomPreparationView extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           buildMakeRoomButton(context, ref, vm),
-          buildWaitButton(context, ref, vm),
+          buildEnterRoomButton(context, ref, vm),
         ],
       ),
     );
@@ -72,7 +72,7 @@ class RoomPreparationView extends ConsumerWidget {
     );
   }
 
-  Widget buildWaitButton(
+  Widget buildEnterRoomButton(
       BuildContext context, WidgetRef ref, RoomPreparationViewModel vm) {
     return Expanded(
       child: Padding(

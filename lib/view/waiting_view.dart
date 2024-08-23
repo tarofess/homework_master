@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:homework_master/main.dart';
 import 'package:homework_master/service/dialog_service.dart';
+import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/view/room_preparation_view.dart';
 import 'package:homework_master/view/widget/common_async_widget.dart';
 import 'package:homework_master/viewmodel/provider/waiting_players_provider.dart';
@@ -11,6 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class WaitingView extends ConsumerWidget {
   final String roomID;
   final dialogService = getIt<DialogService>();
+  final roomRepositoryService = getIt<RoomRepositoryService>();
 
   WaitingView({super.key, required this.roomID});
 
@@ -64,6 +66,7 @@ class WaitingView extends ConsumerWidget {
                 'メンバーがそろいましたか？\n準備が完了したらはいを押してください',
               );
               if (isSuccess) {
+                await roomRepositoryService.updateRoomStatus(roomID, 'ready');
                 if (context.mounted) {
                   context.goNamed('homework_view');
                 }
@@ -75,8 +78,15 @@ class WaitingView extends ConsumerWidget {
   }
 
   Widget buildBody(BuildContext context, WidgetRef ref) {
-    final players = ref.watch(waitingPlayersProvider(roomID));
-    return players.when(
+    final room = ref.watch(waitingPlayersProvider(roomID));
+
+    if (room.value?.status == 'ready') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.goNamed('homework_view');
+      });
+    }
+
+    return room.when(
         data: (data) => data == null
             ? const Center(
                 child: Column(
@@ -88,10 +98,10 @@ class WaitingView extends ConsumerWidget {
                 ),
               )
             : ListView.builder(
-                itemCount: data.length,
+                itemCount: data.players.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(data[index].name),
+                    title: Text(data.players[index].name),
                   );
                 },
               ),
