@@ -32,28 +32,26 @@ class TopView extends ConsumerWidget {
           if (context.mounted) context.goNamed('room_preparation_view');
         }
       },
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Image(
-              image: AssetImage('asset/image/warrior.png'),
-              width: 300,
-              height: 300,
-            ),
-            Text(
-              '宿題マスター',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 40),
-              child: Image.asset(
-                'asset/image/fire.gif',
-                height: 200,
-                width: 200,
+      child: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
+                      buildWarriorImage(),
+                      buildTitleText(context),
+                      buildFireAnimation(context),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
@@ -78,5 +76,45 @@ class TopView extends ConsumerWidget {
         }
       }
     }
+  }
+
+  Widget buildWarriorImage() {
+    return const Expanded(
+      flex: 2,
+      child: Padding(
+        padding: EdgeInsets.only(top: 20),
+        child: Image(
+          image: AssetImage('asset/image/warrior.png'),
+          width: 280,
+          height: 280,
+        ),
+      ),
+    );
+  }
+
+  Widget buildTitleText(BuildContext context) {
+    return Expanded(
+      flex: 1,
+      child: Center(
+        child: Text(
+          '宿題マスター',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+      ),
+    );
+  }
+
+  Widget buildFireAnimation(BuildContext context) {
+    return Expanded(
+      flex: 2,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 60),
+        child: Image.asset(
+          'asset/image/fire.gif',
+          width: 200,
+          height: 200,
+        ),
+      ),
+    );
   }
 }
