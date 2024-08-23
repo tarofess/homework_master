@@ -18,15 +18,19 @@ class HomeworkStartAnimation extends StatelessWidget {
       tween: Tween<double>(begin: 0.0, end: 1.0),
       duration: Duration(seconds: duration),
       builder: (BuildContext context, double opacity, Widget? child) {
-        return Opacity(
-          opacity: opacity,
-          child: Center(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
+        return SafeArea(
+          child: Opacity(
+            opacity: opacity,
+            child: SizedBox(
+              width: double.infinity,
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                ),
               ),
             ),
           ),
