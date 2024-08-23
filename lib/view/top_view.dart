@@ -57,27 +57,6 @@ class TopView extends ConsumerWidget {
     );
   }
 
-  Future<void> registerUsername(BuildContext context, TopViewModel vm) async {
-    final username = await dialogService.showNameRegistrationDialog(context);
-    if (context.mounted) {
-      final isSuccess = await dialogService.showConfirmationDialog(
-        context,
-        username!,
-        '一度登録すると変更できませんが、この名前でよろしいですか？',
-      );
-      if (context.mounted && isSuccess) {
-        try {
-          await sharedPreferencesService.saveUsername(username);
-          if (context.mounted) context.goNamed('room_preparation_view');
-        } catch (e) {
-          if (context.mounted) {
-            dialogService.showErrorDialog(context, '名前の保存中にエラーが発生しました');
-          }
-        }
-      }
-    }
-  }
-
   Widget buildWarriorImage() {
     return const Expanded(
       flex: 2,
@@ -116,5 +95,26 @@ class TopView extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> registerUsername(BuildContext context, TopViewModel vm) async {
+    final username = await dialogService.showNameRegistrationDialog(context);
+    if (context.mounted) {
+      final isSuccess = await dialogService.showConfirmationDialog(
+        context,
+        username!,
+        '一度登録すると変更できませんが、この名前でよろしいですか？',
+      );
+      if (context.mounted && isSuccess) {
+        try {
+          await sharedPreferencesService.saveUsername(username);
+          if (context.mounted) context.goNamed('room_preparation_view');
+        } catch (e) {
+          if (context.mounted) {
+            dialogService.showErrorDialog(context, '名前の保存中にエラーが発生しました');
+          }
+        }
+      }
+    }
   }
 }

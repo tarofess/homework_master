@@ -47,6 +47,14 @@ class RoomPreparationViewModel {
     return List.generate(4, (index) => chars[random.nextInt(chars.length)])
         .join();
   }
+
+  bool isRoomIdExists(String? roomID) {
+    return roomID != null && roomID.isNotEmpty ? true : false;
+  }
+
+  bool isRoomIdNotFound(String? roomID) {
+    return roomID != null && roomID.isEmpty ? true : false;
+  }
 }
 
 final roomPreparationViewModelProvider =

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:homework_master/main.dart';
 import 'package:homework_master/service/dialog_service.dart';
+import 'package:homework_master/viewmodel/provider/owner_check_provider.dart';
 import 'package:homework_master/viewmodel/room_preparation_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -54,7 +55,7 @@ class RoomPreparationView extends ConsumerWidget {
           ),
           onPressed: () async {
             try {
-              ref.read(isOwnerProvider.notifier).state = true;
+              ref.read(ownerCheckProvider.notifier).state = true;
               await makeRoom(context, vm);
             } catch (e) {
               if (context.mounted) {
@@ -92,7 +93,7 @@ class RoomPreparationView extends ConsumerWidget {
           ),
           onPressed: () async {
             try {
-              ref.read(isOwnerProvider.notifier).state = false;
+              ref.read(ownerCheckProvider.notifier).state = false;
               await enterWaitingRoom(context, vm);
             } catch (e) {
               if (context.mounted) {
@@ -114,10 +115,8 @@ class RoomPreparationView extends ConsumerWidget {
       BuildContext context, RoomPreparationViewModel vm) async {
     final roomID =
         await dialogService.showMakeRoomDialog(context, vm.requestMakeRoom);
-    if (roomID.isNotEmpty) {
-      if (context.mounted) {
-        context.pushNamed('waiting_view', extra: roomID);
-      }
+    if (roomID.isNotEmpty && context.mounted) {
+      context.pushNamed('waiting_view', extra: roomID);
     }
   }
 
@@ -126,16 +125,14 @@ class RoomPreparationView extends ConsumerWidget {
     final roomID = await dialogService.showEnterRoomNameDialog(
         context, vm.requestEnterRoom);
 
-    if (roomID != null && roomID.isNotEmpty) {
+    if (vm.isRoomIdExists(roomID)) {
       if (context.mounted) {
         context.pushNamed('waiting_view', extra: roomID);
       }
-    } else if (roomID != null && roomID.isEmpty) {
+    } else if (vm.isRoomIdNotFound(roomID)) {
       if (context.mounted) {
         dialogService.showErrorDialog(context, 'そのような部屋は見つかりませんでした');
       }
     }
   }
 }
-
-final isOwnerProvider = StateProvider<bool>((ref) => false);
