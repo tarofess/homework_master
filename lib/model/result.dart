@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:homework_master/model/player.dart';
 
 part 'result.freezed.dart';
 part 'result.g.dart';
@@ -6,6 +7,7 @@ part 'result.g.dart';
 @freezed
 class Result with _$Result {
   const factory Result({
+    required Player player,
     required int clearTime,
     required int rank,
   }) = _Result;

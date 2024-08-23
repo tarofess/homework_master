@@ -8,7 +8,7 @@ part 'homework.g.dart';
 class Homework with _$Homework {
   const factory Homework({
     required int startTime,
-    required Map<String, Result> results,
+    required List<Result> results,
   }) = _Homework;
 
   factory Homework.fromJson(Map<String, dynamic> json) =>
