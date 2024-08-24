@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:homework_master/main.dart';
 import 'package:homework_master/service/dialog_service.dart';
 import 'package:homework_master/viewmodel/provider/owner_check_provider.dart';
+import 'package:homework_master/viewmodel/provider/roomid_provider.dart';
 import 'package:homework_master/viewmodel/room_preparation_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -56,7 +57,7 @@ class RoomPreparationView extends ConsumerWidget {
           onPressed: () async {
             try {
               ref.read(ownerCheckProvider.notifier).state = true;
-              await makeRoom(context, vm);
+              await makeRoom(context, ref, vm);
             } catch (e) {
               if (context.mounted) {
                 await dialogService.showErrorDialog(context, e.toString());
@@ -94,7 +95,7 @@ class RoomPreparationView extends ConsumerWidget {
           onPressed: () async {
             try {
               ref.read(ownerCheckProvider.notifier).state = false;
-              await enterWaitingRoom(context, vm);
+              await enterWaitingRoom(context, ref, vm);
             } catch (e) {
               if (context.mounted) {
                 await dialogService.showErrorDialog(context, e.toString());
@@ -112,22 +113,24 @@ class RoomPreparationView extends ConsumerWidget {
   }
 
   Future<void> makeRoom(
-      BuildContext context, RoomPreparationViewModel vm) async {
+      BuildContext context, WidgetRef ref, RoomPreparationViewModel vm) async {
     final roomID =
         await dialogService.showMakeRoomDialog(context, vm.requestMakeRoom);
     if (roomID.isNotEmpty && context.mounted) {
-      context.pushNamed('waiting_view', extra: roomID);
+      ref.read(roomIDProvider.notifier).state = roomID;
+      context.pushNamed('waiting_view');
     }
   }
 
   Future<void> enterWaitingRoom(
-      BuildContext context, RoomPreparationViewModel vm) async {
+      BuildContext context, WidgetRef ref, RoomPreparationViewModel vm) async {
     final roomID = await dialogService.showEnterRoomNameDialog(
         context, vm.requestEnterRoom);
 
     if (vm.isRoomIdExists(roomID)) {
+      ref.read(roomIDProvider.notifier).state = roomID!;
       if (context.mounted) {
-        context.pushNamed('waiting_view', extra: roomID);
+        context.pushNamed('waiting_view');
       }
     } else if (vm.isRoomIdNotFound(roomID)) {
       if (context.mounted) {

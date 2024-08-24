@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
-import 'package:go_router/go_router.dart';
 import 'package:homework_master/service/dialog_service.dart';
 import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/service/shared_preferences_service.dart';
-import 'package:homework_master/view/homework_view.dart';
-import 'package:homework_master/view/room_preparation_view.dart';
-import 'package:homework_master/view/top_view.dart';
-import 'package:homework_master/view/waiting_view.dart';
 import 'package:homework_master/view/widget/app_theme.dart';
 import 'package:homework_master/view/widget/common_async_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'firebase_options.dart';
+import 'package:homework_master/go_router_config.dart';
 
 void main() {
   setupGetIt();
@@ -82,62 +78,9 @@ class AppRouter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerConfig: getRouter(),
+      routerConfig: GoRouterConfig.getRouter(),
       theme: AppTheme.defaultTheme(),
     );
-  }
-
-  GoRouter getRouter() {
-    final GoRouter router = GoRouter(
-      routes: <RouteBase>[
-        GoRoute(
-          name: 'top_view',
-          path: '/',
-          builder: (BuildContext context, GoRouterState state) {
-            return TopView();
-          },
-        ),
-        GoRoute(
-          name: 'room_preparation_view',
-          path: '/room_preparation_view',
-          pageBuilder: (BuildContext context, GoRouterState state) {
-            return CustomTransitionPage(
-              child: RoomPreparationView(),
-              transitionDuration: const Duration(milliseconds: 800),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                var begin = const Offset(0.0, 1.0);
-                var end = Offset.zero;
-                var curve = Curves.fastLinearToSlowEaseIn;
-
-                var tween = Tween(begin: begin, end: end)
-                    .chain(CurveTween(curve: curve));
-                var offsetAnimation = animation.drive(tween);
-
-                return SlideTransition(position: offsetAnimation, child: child);
-              },
-            );
-          },
-        ),
-        GoRoute(
-          name: 'waiting_view',
-          path: '/room_preparation_view/waiting_view',
-          builder: (BuildContext context, GoRouterState state) {
-            final roomID = state.extra as String;
-            return WaitingView(roomID: roomID);
-          },
-        ),
-        GoRoute(
-          name: 'homework_view',
-          path: '/room_preparation_view/waiting_view/homework_view',
-          builder: (BuildContext context, GoRouterState state) {
-            return HomeworkView();
-          },
-        ),
-      ],
-    );
-
-    return router;
   }
 }
 

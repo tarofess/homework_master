@@ -2,21 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:homework_master/main.dart';
 import 'package:homework_master/service/dialog_service.dart';
+import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/view/widget/homework_start_animation.dart';
 import 'package:homework_master/view/widget/homework_timer.dart';
 import 'package:homework_master/view/widget/loading_overlay.dart';
 import 'package:homework_master/viewmodel/homework_viewmodel.dart';
 import 'package:homework_master/viewmodel/provider/homework_timer_provider.dart';
+import 'package:homework_master/viewmodel/provider/roomid_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomeworkView extends HookConsumerWidget {
   final dialogService = getIt<DialogService>();
+  final roomRepositoryService = getIt<RoomRepositoryService>();
 
   HomeworkView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final vm = ref.watch(homeworkViewModelProvider);
+    final roomID = ref.read(roomIDProvider);
     final isEnableFinishButton = useState(false);
     final isShowReadyTextAnimation = useState(false);
     final isShowGoTextAnimation = useState(false);
@@ -32,11 +36,27 @@ class HomeworkView extends HookConsumerWidget {
         isShowGoTextAnimation.value = true;
         isShowTimer.value = true;
         ref.read(homeworkTimerProvider.notifier).startTimer();
+
         await Future.delayed(const Duration(seconds: 3));
         isShowGoTextAnimation.value = false;
       }
 
-      animationSequence();
+      Future<void> addHomework() async {
+        await roomRepositoryService.addHomework(roomID);
+      }
+
+      Future<void> initializeEffect() async {
+        await addHomework();
+        animationSequence();
+      }
+
+      try {
+        initializeEffect();
+      } catch (e) {
+        if (context.mounted) {
+          dialogService.showErrorDialog(context, e.toString());
+        }
+      }
       return null;
     }, []);
 
@@ -45,6 +65,7 @@ class HomeworkView extends HookConsumerWidget {
       context,
       vm,
       ref,
+      roomID,
       isEnableFinishButton.value,
       isShowReadyTextAnimation.value,
       isShowGoTextAnimation.value,
@@ -56,6 +77,7 @@ class HomeworkView extends HookConsumerWidget {
     BuildContext context,
     HomeworkViewModel vm,
     WidgetRef ref,
+    String roomID,
     bool isEnableFinishButton,
     bool isShowReadyTextAnimation,
     bool isShowGoTextAnimation,
@@ -83,7 +105,7 @@ class HomeworkView extends HookConsumerWidget {
                 ? () async {
                     try {
                       await LoadingOverlay.of(context)
-                          .during(() => vm.finishedHomework());
+                          .during(() => vm.finishedHomework(roomID));
                       ref.read(homeworkTimerProvider.notifier).stopTimer();
                     } catch (e) {
                       if (context.mounted) {

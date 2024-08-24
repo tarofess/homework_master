@@ -6,36 +6,38 @@ import 'package:homework_master/service/dialog_service.dart';
 import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/view/widget/common_async_widget.dart';
 import 'package:homework_master/viewmodel/provider/owner_check_provider.dart';
+import 'package:homework_master/viewmodel/provider/roomid_provider.dart';
 import 'package:homework_master/viewmodel/provider/waiting_players_provider.dart';
 import 'package:homework_master/viewmodel/waiting_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class WaitingView extends ConsumerWidget {
-  final String roomID;
   final dialogService = getIt<DialogService>();
   final roomRepositoryService = getIt<RoomRepositoryService>();
 
-  WaitingView({super.key, required this.roomID});
+  WaitingView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final vm = ref.watch(waitingViewModelProvider);
     final isOwner = ref.watch(ownerCheckProvider);
+    final roomID = ref.read(roomIDProvider);
 
     return Scaffold(
-      appBar: buildAppBar(context, vm, isOwner),
-      body: buildBody(context, vm, ref),
+      appBar: buildAppBar(context, vm, isOwner, roomID),
+      body: buildBody(context, vm, ref, roomID),
     );
   }
 
-  AppBar buildAppBar(BuildContext context, WaitingViewModel vm, bool isOwner) {
+  AppBar buildAppBar(
+      BuildContext context, WaitingViewModel vm, bool isOwner, String roomID) {
     return AppBar(
       automaticallyImplyLeading: false,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () async {
           try {
-            await handleRoomExit(context, vm, isOwner);
+            await handleRoomExit(context, vm, isOwner, roomID);
           } catch (e) {
             if (context.mounted) {
               dialogService.showErrorDialog(context, e.toString());
@@ -50,7 +52,7 @@ class WaitingView extends ConsumerWidget {
             icon: const Icon(Icons.check_circle_outline),
             onPressed: () async {
               try {
-                await handleRoomReadyConfirmation(context, vm);
+                await handleRoomReadyConfirmation(context, vm, roomID);
               } catch (e) {
                 if (context.mounted) {
                   dialogService.showErrorDialog(context, e.toString());
@@ -62,7 +64,8 @@ class WaitingView extends ConsumerWidget {
     );
   }
 
-  Widget buildBody(BuildContext context, WaitingViewModel vm, WidgetRef ref) {
+  Widget buildBody(
+      BuildContext context, WaitingViewModel vm, WidgetRef ref, String roomID) {
     final room = ref.watch(waitingPlayersProvider(roomID));
     checkRoomStatus(context, vm, room.value);
 
@@ -113,8 +116,8 @@ class WaitingView extends ConsumerWidget {
         loading: () => CommonAsyncWidget.showLoadingIndicator());
   }
 
-  Future<void> handleRoomExit(
-      BuildContext context, WaitingViewModel vm, bool isOwner) async {
+  Future<void> handleRoomExit(BuildContext context, WaitingViewModel vm,
+      bool isOwner, String roomID) async {
     bool isSuccess = false;
 
     if (isOwner) {
@@ -131,7 +134,7 @@ class WaitingView extends ConsumerWidget {
   }
 
   Future<void> handleRoomReadyConfirmation(
-      BuildContext context, WaitingViewModel vm) async {
+      BuildContext context, WaitingViewModel vm, String roomID) async {
     final isSuccess = await dialogService.showConfirmationDialog(
         context, '準備OK？', 'メンバーがそろいましたか？\n準備が完了したらはいを押してください');
     if (isSuccess) {

@@ -56,4 +56,13 @@ class RoomRepositoryService {
       return false;
     }
   }
+
+  Future<void> addHomework(String roomID) async {
+    final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
+    await ref.child(roomID).child('homework').set({
+      'startTime': ServerValue.timestamp,
+    });
+  }
+
+  Future<void> addResult(String roomID) async {}
 }
