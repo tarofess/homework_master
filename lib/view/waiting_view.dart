@@ -81,10 +81,10 @@ class WaitingView extends ConsumerWidget {
                 ),
               )
             : ListView.builder(
-                itemCount: data.players.length,
+                itemCount: data.player.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(data.players[index].name),
+                    title: Text(data.playersList[index].value.name),
                   );
                 },
               ),

@@ -7,12 +7,10 @@ part of 'player.dart';
 // **************************************************************************
 
 _$PlayerImpl _$$PlayerImplFromJson(Map<String, dynamic> json) => _$PlayerImpl(
-      id: json['id'] as String,
       name: json['name'] as String,
     );
 
 Map<String, dynamic> _$$PlayerImplToJson(_$PlayerImpl instance) =>
     <String, dynamic>{
-      'id': instance.id,
       'name': instance.name,
     };

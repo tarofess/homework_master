@@ -21,30 +21,16 @@ class RoomRepositoryService {
 
   Future<void> addPlayer(String roomID, String username, String userID) async {
     final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
-    await ref.child(roomID).child('players').runTransaction((Object? players) {
-      if (players == null) {
-        return Transaction.success([
-          {'id': userID, 'name': username}
-        ]);
-      }
-
-      List<dynamic> updatedPlayers = List.from(players as List);
-      updatedPlayers.add({'id': userID, 'name': username});
-      return Transaction.success(updatedPlayers);
-    });
+    await ref
+        .child(roomID)
+        .child('player')
+        .child(userID)
+        .set({'name': username});
   }
 
   Future<void> removePlayer(String roomID, String userID) async {
     final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
-    await ref.child(roomID).child('players').runTransaction((Object? players) {
-      if (players == null) {
-        return Transaction.success(null);
-      }
-
-      List<dynamic> updatedPlayers = List.from(players as List);
-      updatedPlayers.removeWhere((player) => player['id'] == userID);
-      return Transaction.success(updatedPlayers);
-    });
+    await ref.child(roomID).child('player').child(userID).remove();
   }
 
   Future<bool> isExistRoomID(String roomID) async {

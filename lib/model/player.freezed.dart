@@ -20,7 +20,6 @@ Player _$PlayerFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Player {
-  String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -33,7 +32,7 @@ abstract class $PlayerCopyWith<$Res> {
   factory $PlayerCopyWith(Player value, $Res Function(Player) then) =
       _$PlayerCopyWithImpl<$Res, Player>;
   @useResult
-  $Res call({String id, String name});
+  $Res call({String name});
 }
 
 /// @nodoc
@@ -49,14 +48,9 @@ class _$PlayerCopyWithImpl<$Res, $Val extends Player>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
     Object? name = null,
   }) {
     return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -72,7 +66,7 @@ abstract class _$$PlayerImplCopyWith<$Res> implements $PlayerCopyWith<$Res> {
       __$$PlayerImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name});
+  $Res call({String name});
 }
 
 /// @nodoc
@@ -86,14 +80,9 @@ class __$$PlayerImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
     Object? name = null,
   }) {
     return _then(_$PlayerImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -105,19 +94,17 @@ class __$$PlayerImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$PlayerImpl implements _Player {
-  const _$PlayerImpl({required this.id, required this.name});
+  const _$PlayerImpl({required this.name});
 
   factory _$PlayerImpl.fromJson(Map<String, dynamic> json) =>
       _$$PlayerImplFromJson(json);
 
   @override
-  final String id;
-  @override
   final String name;
 
   @override
   String toString() {
-    return 'Player(id: $id, name: $name)';
+    return 'Player(name: $name)';
   }
 
   @override
@@ -125,13 +112,12 @@ class _$PlayerImpl implements _Player {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PlayerImpl &&
-            (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name);
+  int get hashCode => Object.hash(runtimeType, name);
 
   @JsonKey(ignore: true)
   @override
@@ -148,13 +134,10 @@ class _$PlayerImpl implements _Player {
 }
 
 abstract class _Player implements Player {
-  const factory _Player(
-      {required final String id, required final String name}) = _$PlayerImpl;
+  const factory _Player({required final String name}) = _$PlayerImpl;
 
   factory _Player.fromJson(Map<String, dynamic> json) = _$PlayerImpl.fromJson;
 
-  @override
-  String get id;
   @override
   String get name;
   @override

@@ -6,7 +6,6 @@ part 'player.g.dart';
 @freezed
 class Player with _$Player {
   const factory Player({
-    required String id,
     required String name,
   }) = _Player;
 

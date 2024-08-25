@@ -22,7 +22,7 @@ Room _$RoomFromJson(Map<String, dynamic> json) {
 mixin _$Room {
   int get createdAt => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
-  List<Player> get players => throw _privateConstructorUsedError;
+  Map<String, Player> get player => throw _privateConstructorUsedError;
   Homework? get homework => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -36,7 +36,10 @@ abstract class $RoomCopyWith<$Res> {
       _$RoomCopyWithImpl<$Res, Room>;
   @useResult
   $Res call(
-      {int createdAt, String status, List<Player> players, Homework? homework});
+      {int createdAt,
+      String status,
+      Map<String, Player> player,
+      Homework? homework});
 
   $HomeworkCopyWith<$Res>? get homework;
 }
@@ -56,7 +59,7 @@ class _$RoomCopyWithImpl<$Res, $Val extends Room>
   $Res call({
     Object? createdAt = null,
     Object? status = null,
-    Object? players = null,
+    Object? player = null,
     Object? homework = freezed,
   }) {
     return _then(_value.copyWith(
@@ -68,10 +71,10 @@ class _$RoomCopyWithImpl<$Res, $Val extends Room>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
-      players: null == players
-          ? _value.players
-          : players // ignore: cast_nullable_to_non_nullable
-              as List<Player>,
+      player: null == player
+          ? _value.player
+          : player // ignore: cast_nullable_to_non_nullable
+              as Map<String, Player>,
       homework: freezed == homework
           ? _value.homework
           : homework // ignore: cast_nullable_to_non_nullable
@@ -100,7 +103,10 @@ abstract class _$$RoomImplCopyWith<$Res> implements $RoomCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {int createdAt, String status, List<Player> players, Homework? homework});
+      {int createdAt,
+      String status,
+      Map<String, Player> player,
+      Homework? homework});
 
   @override
   $HomeworkCopyWith<$Res>? get homework;
@@ -118,7 +124,7 @@ class __$$RoomImplCopyWithImpl<$Res>
   $Res call({
     Object? createdAt = null,
     Object? status = null,
-    Object? players = null,
+    Object? player = null,
     Object? homework = freezed,
   }) {
     return _then(_$RoomImpl(
@@ -130,10 +136,10 @@ class __$$RoomImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
-      players: null == players
-          ? _value._players
-          : players // ignore: cast_nullable_to_non_nullable
-              as List<Player>,
+      player: null == player
+          ? _value._player
+          : player // ignore: cast_nullable_to_non_nullable
+              as Map<String, Player>,
       homework: freezed == homework
           ? _value.homework
           : homework // ignore: cast_nullable_to_non_nullable
@@ -148,9 +154,9 @@ class _$RoomImpl implements _Room {
   const _$RoomImpl(
       {required this.createdAt,
       required this.status,
-      required final List<Player> players,
+      required final Map<String, Player> player,
       required this.homework})
-      : _players = players;
+      : _player = player;
 
   factory _$RoomImpl.fromJson(Map<String, dynamic> json) =>
       _$$RoomImplFromJson(json);
@@ -159,12 +165,12 @@ class _$RoomImpl implements _Room {
   final int createdAt;
   @override
   final String status;
-  final List<Player> _players;
+  final Map<String, Player> _player;
   @override
-  List<Player> get players {
-    if (_players is EqualUnmodifiableListView) return _players;
+  Map<String, Player> get player {
+    if (_player is EqualUnmodifiableMapView) return _player;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_players);
+    return EqualUnmodifiableMapView(_player);
   }
 
   @override
@@ -172,7 +178,7 @@ class _$RoomImpl implements _Room {
 
   @override
   String toString() {
-    return 'Room(createdAt: $createdAt, status: $status, players: $players, homework: $homework)';
+    return 'Room(createdAt: $createdAt, status: $status, player: $player, homework: $homework)';
   }
 
   @override
@@ -183,7 +189,7 @@ class _$RoomImpl implements _Room {
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.status, status) || other.status == status) &&
-            const DeepCollectionEquality().equals(other._players, _players) &&
+            const DeepCollectionEquality().equals(other._player, _player) &&
             (identical(other.homework, homework) ||
                 other.homework == homework));
   }
@@ -191,7 +197,7 @@ class _$RoomImpl implements _Room {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, createdAt, status,
-      const DeepCollectionEquality().hash(_players), homework);
+      const DeepCollectionEquality().hash(_player), homework);
 
   @JsonKey(ignore: true)
   @override
@@ -211,7 +217,7 @@ abstract class _Room implements Room {
   const factory _Room(
       {required final int createdAt,
       required final String status,
-      required final List<Player> players,
+      required final Map<String, Player> player,
       required final Homework? homework}) = _$RoomImpl;
 
   factory _Room.fromJson(Map<String, dynamic> json) = _$RoomImpl.fromJson;
@@ -221,7 +227,7 @@ abstract class _Room implements Room {
   @override
   String get status;
   @override
-  List<Player> get players;
+  Map<String, Player> get player;
   @override
   Homework? get homework;
   @override
