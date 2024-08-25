@@ -20,9 +20,7 @@ Result _$ResultFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Result {
-  Player get player => throw _privateConstructorUsedError;
   int get clearTime => throw _privateConstructorUsedError;
-  int get rank => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,9 +32,7 @@ abstract class $ResultCopyWith<$Res> {
   factory $ResultCopyWith(Result value, $Res Function(Result) then) =
       _$ResultCopyWithImpl<$Res, Result>;
   @useResult
-  $Res call({Player player, int clearTime, int rank});
-
-  $PlayerCopyWith<$Res> get player;
+  $Res call({int clearTime});
 }
 
 /// @nodoc
@@ -52,32 +48,14 @@ class _$ResultCopyWithImpl<$Res, $Val extends Result>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? player = null,
     Object? clearTime = null,
-    Object? rank = null,
   }) {
     return _then(_value.copyWith(
-      player: null == player
-          ? _value.player
-          : player // ignore: cast_nullable_to_non_nullable
-              as Player,
       clearTime: null == clearTime
           ? _value.clearTime
           : clearTime // ignore: cast_nullable_to_non_nullable
               as int,
-      rank: null == rank
-          ? _value.rank
-          : rank // ignore: cast_nullable_to_non_nullable
-              as int,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $PlayerCopyWith<$Res> get player {
-    return $PlayerCopyWith<$Res>(_value.player, (value) {
-      return _then(_value.copyWith(player: value) as $Val);
-    });
   }
 }
 
@@ -88,10 +66,7 @@ abstract class _$$ResultImplCopyWith<$Res> implements $ResultCopyWith<$Res> {
       __$$ResultImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Player player, int clearTime, int rank});
-
-  @override
-  $PlayerCopyWith<$Res> get player;
+  $Res call({int clearTime});
 }
 
 /// @nodoc
@@ -105,22 +80,12 @@ class __$$ResultImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? player = null,
     Object? clearTime = null,
-    Object? rank = null,
   }) {
     return _then(_$ResultImpl(
-      player: null == player
-          ? _value.player
-          : player // ignore: cast_nullable_to_non_nullable
-              as Player,
       clearTime: null == clearTime
           ? _value.clearTime
           : clearTime // ignore: cast_nullable_to_non_nullable
-              as int,
-      rank: null == rank
-          ? _value.rank
-          : rank // ignore: cast_nullable_to_non_nullable
               as int,
     ));
   }
@@ -129,22 +94,17 @@ class __$$ResultImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ResultImpl implements _Result {
-  const _$ResultImpl(
-      {required this.player, required this.clearTime, required this.rank});
+  const _$ResultImpl({required this.clearTime});
 
   factory _$ResultImpl.fromJson(Map<String, dynamic> json) =>
       _$$ResultImplFromJson(json);
 
   @override
-  final Player player;
-  @override
   final int clearTime;
-  @override
-  final int rank;
 
   @override
   String toString() {
-    return 'Result(player: $player, clearTime: $clearTime, rank: $rank)';
+    return 'Result(clearTime: $clearTime)';
   }
 
   @override
@@ -152,15 +112,13 @@ class _$ResultImpl implements _Result {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ResultImpl &&
-            (identical(other.player, player) || other.player == player) &&
             (identical(other.clearTime, clearTime) ||
-                other.clearTime == clearTime) &&
-            (identical(other.rank, rank) || other.rank == rank));
+                other.clearTime == clearTime));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, player, clearTime, rank);
+  int get hashCode => Object.hash(runtimeType, clearTime);
 
   @JsonKey(ignore: true)
   @override
@@ -177,19 +135,12 @@ class _$ResultImpl implements _Result {
 }
 
 abstract class _Result implements Result {
-  const factory _Result(
-      {required final Player player,
-      required final int clearTime,
-      required final int rank}) = _$ResultImpl;
+  const factory _Result({required final int clearTime}) = _$ResultImpl;
 
   factory _Result.fromJson(Map<String, dynamic> json) = _$ResultImpl.fromJson;
 
   @override
-  Player get player;
-  @override
   int get clearTime;
-  @override
-  int get rank;
   @override
   @JsonKey(ignore: true)
   _$$ResultImplCopyWith<_$ResultImpl> get copyWith =>

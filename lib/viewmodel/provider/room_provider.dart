@@ -2,8 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:homework_master/model/room.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final waitingPlayersProvider =
-    StreamProvider.family<Room?, String>((ref, roomID) {
+final roomProvider = StreamProvider.family<Room?, String>((ref, roomID) {
   final ref = FirebaseDatabase.instance.ref('room/$roomID');
   return ref.onValue.map((event) {
     if (event.snapshot.value == null) {

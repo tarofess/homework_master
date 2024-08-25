@@ -7,7 +7,7 @@ import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/view/widget/common_async_widget.dart';
 import 'package:homework_master/viewmodel/provider/owner_check_provider.dart';
 import 'package:homework_master/viewmodel/provider/roomid_provider.dart';
-import 'package:homework_master/viewmodel/provider/waiting_players_provider.dart';
+import 'package:homework_master/viewmodel/provider/room_provider.dart';
 import 'package:homework_master/viewmodel/waiting_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -66,7 +66,7 @@ class WaitingView extends ConsumerWidget {
 
   Widget buildBody(
       BuildContext context, WaitingViewModel vm, WidgetRef ref, String roomID) {
-    final room = ref.watch(waitingPlayersProvider(roomID));
+    final room = ref.watch(roomProvider(roomID));
     checkRoomStatus(context, vm, room.value);
 
     return room.when(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:homework_master/view/homework_view.dart';
+import 'package:homework_master/view/ranking_view.dart';
 import 'package:homework_master/view/room_preparation_view.dart';
 import 'package:homework_master/view/top_view.dart';
 import 'package:homework_master/view/waiting_view.dart';
@@ -50,6 +51,14 @@ class GoRouterConfig {
           path: '/room_preparation_view/waiting_view/homework_view',
           builder: (BuildContext context, GoRouterState state) {
             return HomeworkView();
+          },
+        ),
+        GoRoute(
+          name: 'ranking_view',
+          path:
+              '/room_preparation_view/waiting_view/homework_view/ranking_view',
+          builder: (BuildContext context, GoRouterState state) {
+            return RankingView();
           },
         ),
       ],

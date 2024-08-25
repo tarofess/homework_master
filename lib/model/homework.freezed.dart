@@ -21,7 +21,7 @@ Homework _$HomeworkFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Homework {
   int get startTime => throw _privateConstructorUsedError;
-  List<Result> get results => throw _privateConstructorUsedError;
+  Map<String, Result> get result => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +34,7 @@ abstract class $HomeworkCopyWith<$Res> {
   factory $HomeworkCopyWith(Homework value, $Res Function(Homework) then) =
       _$HomeworkCopyWithImpl<$Res, Homework>;
   @useResult
-  $Res call({int startTime, List<Result> results});
+  $Res call({int startTime, Map<String, Result> result});
 }
 
 /// @nodoc
@@ -51,17 +51,17 @@ class _$HomeworkCopyWithImpl<$Res, $Val extends Homework>
   @override
   $Res call({
     Object? startTime = null,
-    Object? results = null,
+    Object? result = null,
   }) {
     return _then(_value.copyWith(
       startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
               as int,
-      results: null == results
-          ? _value.results
-          : results // ignore: cast_nullable_to_non_nullable
-              as List<Result>,
+      result: null == result
+          ? _value.result
+          : result // ignore: cast_nullable_to_non_nullable
+              as Map<String, Result>,
     ) as $Val);
   }
 }
@@ -74,7 +74,7 @@ abstract class _$$HomeworkImplCopyWith<$Res>
       __$$HomeworkImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int startTime, List<Result> results});
+  $Res call({int startTime, Map<String, Result> result});
 }
 
 /// @nodoc
@@ -89,17 +89,17 @@ class __$$HomeworkImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? startTime = null,
-    Object? results = null,
+    Object? result = null,
   }) {
     return _then(_$HomeworkImpl(
       startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
               as int,
-      results: null == results
-          ? _value._results
-          : results // ignore: cast_nullable_to_non_nullable
-              as List<Result>,
+      result: null == result
+          ? _value._result
+          : result // ignore: cast_nullable_to_non_nullable
+              as Map<String, Result>,
     ));
   }
 }
@@ -108,25 +108,25 @@ class __$$HomeworkImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$HomeworkImpl implements _Homework {
   const _$HomeworkImpl(
-      {required this.startTime, required final List<Result> results})
-      : _results = results;
+      {required this.startTime, required final Map<String, Result> result})
+      : _result = result;
 
   factory _$HomeworkImpl.fromJson(Map<String, dynamic> json) =>
       _$$HomeworkImplFromJson(json);
 
   @override
   final int startTime;
-  final List<Result> _results;
+  final Map<String, Result> _result;
   @override
-  List<Result> get results {
-    if (_results is EqualUnmodifiableListView) return _results;
+  Map<String, Result> get result {
+    if (_result is EqualUnmodifiableMapView) return _result;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_results);
+    return EqualUnmodifiableMapView(_result);
   }
 
   @override
   String toString() {
-    return 'Homework(startTime: $startTime, results: $results)';
+    return 'Homework(startTime: $startTime, result: $result)';
   }
 
   @override
@@ -136,13 +136,13 @@ class _$HomeworkImpl implements _Homework {
             other is _$HomeworkImpl &&
             (identical(other.startTime, startTime) ||
                 other.startTime == startTime) &&
-            const DeepCollectionEquality().equals(other._results, _results));
+            const DeepCollectionEquality().equals(other._result, _result));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, startTime, const DeepCollectionEquality().hash(_results));
+      runtimeType, startTime, const DeepCollectionEquality().hash(_result));
 
   @JsonKey(ignore: true)
   @override
@@ -161,7 +161,7 @@ class _$HomeworkImpl implements _Homework {
 abstract class _Homework implements Homework {
   const factory _Homework(
       {required final int startTime,
-      required final List<Result> results}) = _$HomeworkImpl;
+      required final Map<String, Result> result}) = _$HomeworkImpl;
 
   factory _Homework.fromJson(Map<String, dynamic> json) =
       _$HomeworkImpl.fromJson;
@@ -169,7 +169,7 @@ abstract class _Homework implements Homework {
   @override
   int get startTime;
   @override
-  List<Result> get results;
+  Map<String, Result> get result;
   @override
   @JsonKey(ignore: true)
   _$$HomeworkImplCopyWith<_$HomeworkImpl> get copyWith =>

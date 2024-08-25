@@ -7,9 +7,7 @@ part 'result.g.dart';
 @freezed
 class Result with _$Result {
   const factory Result({
-    required Player player,
     required int clearTime,
-    required int rank,
   }) = _Result;
 
   factory Result.fromJson(Map<String, dynamic> json) => _$ResultFromJson(json);

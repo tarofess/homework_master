@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:homework_master/main.dart';
+import 'package:homework_master/model/room.dart';
 import 'package:homework_master/service/dialog_service.dart';
 import 'package:homework_master/service/room_repository_service.dart';
+import 'package:homework_master/view/widget/blinking_text.dart';
 import 'package:homework_master/view/widget/homework_start_animation.dart';
 import 'package:homework_master/view/widget/homework_timer.dart';
 import 'package:homework_master/view/widget/loading_overlay.dart';
 import 'package:homework_master/viewmodel/homework_viewmodel.dart';
 import 'package:homework_master/viewmodel/provider/homework_timer_provider.dart';
+import 'package:homework_master/viewmodel/provider/room_provider.dart';
 import 'package:homework_master/viewmodel/provider/roomid_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -90,9 +94,13 @@ class HomeworkView extends HookConsumerWidget {
     ValueNotifier<bool> isFinishButtonPressed,
     Color buttonColor,
   ) {
+    final room = ref.watch(roomProvider(roomID));
+    checkIfAllUserFinishedHomework(context, vm, room.value);
+
     return Stack(
       fit: StackFit.expand,
       children: [
+        SafeArea(child: waitingText(isFinishButtonPressed)),
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
@@ -186,6 +194,34 @@ class HomeworkView extends HookConsumerWidget {
       await LoadingOverlay.of(context)
           .during(() => vm.finishedHomework(roomID));
       ref.read(homeworkTimerProvider.notifier).stopTimer();
+    }
+  }
+
+  Widget waitingText(ValueNotifier<bool> isFinishButtonPressed) {
+    return isFinishButtonPressed.value
+        ? Padding(
+            padding: const EdgeInsets.only(top: 20, left: 40, right: 40),
+            child: BlinkingText(
+              text: 'ほかのメンバーが宿題を終わるのを待っています...',
+              style: TextStyle(fontSize: 20, color: Colors.blue[600]),
+            ),
+          )
+        : const SizedBox();
+  }
+
+  void checkIfAllUserFinishedHomework(
+      BuildContext context, HomeworkViewModel vm, Room? room) {
+    if (vm.isCreatedHomework(room)) {
+      return;
+    }
+
+    bool allKeysContained = room!.player.keys
+        .every((key) => room.homework!.result.containsKey(key));
+
+    if (allKeysContained) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.goNamed('ranking_view');
+      });
     }
   }
 }

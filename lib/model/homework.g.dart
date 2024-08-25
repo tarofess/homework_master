@@ -9,13 +9,13 @@ part of 'homework.dart';
 _$HomeworkImpl _$$HomeworkImplFromJson(Map<String, dynamic> json) =>
     _$HomeworkImpl(
       startTime: (json['startTime'] as num).toInt(),
-      results: (json['results'] as List<dynamic>)
-          .map((e) => Result.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      result: (json['result'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(k, Result.fromJson(e as Map<String, dynamic>)),
+      ),
     );
 
 Map<String, dynamic> _$$HomeworkImplToJson(_$HomeworkImpl instance) =>
     <String, dynamic>{
       'startTime': instance.startTime,
-      'results': instance.results,
+      'result': instance.result,
     };
