@@ -25,6 +25,9 @@ class HomeworkView extends HookConsumerWidget {
     final isShowReadyTextAnimation = useState(false);
     final isShowGoTextAnimation = useState(false);
     final isShowTimer = useState(false);
+    final isFinishButtonPressed = useState(false);
+    final buttonColor =
+        isFinishButtonPressed.value ? Colors.grey : Colors.green[400];
 
     useEffect(() {
       void animationSequence() async {
@@ -66,10 +69,12 @@ class HomeworkView extends HookConsumerWidget {
       vm,
       ref,
       roomID,
-      isEnableFinishButton.value,
-      isShowReadyTextAnimation.value,
-      isShowGoTextAnimation.value,
-      isShowTimer.value,
+      isEnableFinishButton,
+      isShowReadyTextAnimation,
+      isShowGoTextAnimation,
+      isShowTimer,
+      isFinishButtonPressed,
+      buttonColor!,
     ));
   }
 
@@ -78,10 +83,12 @@ class HomeworkView extends HookConsumerWidget {
     HomeworkViewModel vm,
     WidgetRef ref,
     String roomID,
-    bool isEnableFinishButton,
-    bool isShowReadyTextAnimation,
-    bool isShowGoTextAnimation,
-    bool isShowTimer,
+    ValueNotifier<bool> isEnableFinishButton,
+    ValueNotifier<bool> isShowReadyTextAnimation,
+    ValueNotifier<bool> isShowGoTextAnimation,
+    ValueNotifier<bool> isShowTimer,
+    ValueNotifier<bool> isFinishButtonPressed,
+    Color buttonColor,
   ) {
     return Stack(
       fit: StackFit.expand,
@@ -91,7 +98,7 @@ class HomeworkView extends HookConsumerWidget {
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
-              backgroundColor: Colors.green[400],
+              backgroundColor: buttonColor,
               minimumSize: const Size(300, 300),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.horizontal(
@@ -101,16 +108,19 @@ class HomeworkView extends HookConsumerWidget {
               ),
               elevation: 12,
             ),
-            onPressed: isEnableFinishButton
+            onPressed: isEnableFinishButton.value
                 ? () async {
                     try {
-                      await LoadingOverlay.of(context)
-                          .during(() => vm.finishedHomework(roomID));
-                      ref.read(homeworkTimerProvider.notifier).stopTimer();
+                      await handleFinishButtonPressed(
+                        context,
+                        vm,
+                        ref,
+                        roomID,
+                        isFinishButtonPressed,
+                      );
                     } catch (e) {
                       if (context.mounted) {
-                        await dialogService.showErrorDialog(
-                            context, e.toString());
+                        dialogService.showErrorDialog(context, e.toString());
                       }
                     }
                   }
@@ -124,20 +134,20 @@ class HomeworkView extends HookConsumerWidget {
             ),
           ),
         ),
-        if (isShowTimer)
+        if (isShowTimer.value)
           const Positioned(
             left: 0,
             right: 0,
             bottom: 50,
             child: Center(child: HomeworkTimer()),
           ),
-        if (isShowReadyTextAnimation)
+        if (isShowReadyTextAnimation.value)
           const HomeworkStartAnimation(
             text: 'Ready...',
             fontSize: 40,
             duration: 1,
           ),
-        if (isShowGoTextAnimation)
+        if (isShowGoTextAnimation.value)
           const HomeworkStartAnimation(
             text: 'Go!',
             fontSize: 160,
@@ -145,5 +155,37 @@ class HomeworkView extends HookConsumerWidget {
           ),
       ],
     );
+  }
+
+  Future<void> handleFinishButtonPressed(
+    BuildContext context,
+    HomeworkViewModel vm,
+    WidgetRef ref,
+    String roomID,
+    ValueNotifier<bool> isFinishButtonPressed,
+  ) async {
+    if (isFinishButtonPressed.value) {
+      final result = await dialogService.showConfirmationDialog(
+        context,
+        '取り消し確認',
+        'ひょっとしてまだ終わってなかった？\n宿題の終了を取り消しますか？',
+      );
+
+      if (!result) {
+        return;
+      }
+
+      isFinishButtonPressed.value = false;
+
+      if (context.mounted) {
+        await LoadingOverlay.of(context).during(() => vm.undoHomework(roomID));
+      }
+      ref.read(homeworkTimerProvider.notifier).startTimer();
+    } else {
+      isFinishButtonPressed.value = true;
+      await LoadingOverlay.of(context)
+          .during(() => vm.finishedHomework(roomID));
+      ref.read(homeworkTimerProvider.notifier).stopTimer();
+    }
   }
 }

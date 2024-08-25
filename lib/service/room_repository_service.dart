@@ -50,5 +50,25 @@ class RoomRepositoryService {
     });
   }
 
-  Future<void> addResult(String roomID) async {}
+  Future<void> addResult(String roomID, String userID) async {
+    final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
+    await ref
+        .child(roomID)
+        .child('homework')
+        .child('result')
+        .child(userID)
+        .set({
+      'clearTime': ServerValue.timestamp,
+    });
+  }
+
+  Future<void> removeResult(String roomID, String userID) async {
+    final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
+    await ref
+        .child(roomID)
+        .child('homework')
+        .child('result')
+        .child(userID)
+        .remove();
+  }
 }
