@@ -23,13 +23,14 @@ class PlayerListCard extends StatelessWidget {
                 '$index位',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Colors.black,
-                      fontSize: 24,
+                      fontSize: 22,
                     ),
               ),
-        title: Text(
-          playerName ?? '',
-          overflow: TextOverflow.ellipsis,
-        ),
+        title: Text(playerName ?? '',
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                )),
         trailing: index == null
             ? null
             : Text(

@@ -74,7 +74,7 @@ class HomeworkView extends HookConsumerWidget {
     vm.moveToRankigViewIfAllUserFinished(
       room.value,
       () => WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(homeworkTimerProvider.notifier).resetTimer();
+        if (context.mounted) ref.invalidate(homeworkTimerProvider);
         context.goNamed('ranking_view');
       }),
     );

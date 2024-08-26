@@ -14,7 +14,7 @@ class HomeworkTimer extends HookConsumerWidget {
 
     return Text(
       timerNotifier.formatTime(),
-      style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+      style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
     );
   }
 }
