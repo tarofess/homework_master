@@ -5,6 +5,7 @@ import 'package:homework_master/model/homework.dart';
 import 'package:homework_master/model/room.dart';
 import 'package:homework_master/service/dialog_service.dart';
 import 'package:homework_master/view/widget/common_async_widget.dart';
+import 'package:homework_master/view/widget/player_list_card.dart';
 import 'package:homework_master/viewmodel/provider/room_provider.dart';
 import 'package:homework_master/viewmodel/provider/roomid_provider.dart';
 import 'package:homework_master/viewmodel/ranking_viewmodel.dart';
@@ -72,12 +73,13 @@ class RankingView extends ConsumerWidget {
           return RepaintBoundary(
             key: globalKey,
             child: ListView.builder(
-              itemCount: data?.playersList.length,
+              itemCount: data?.homework?.resultsList.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Text('${index + 1}位'),
-                  title: Text(
-                      data?.homework?.resultsList[index].value.username ?? ''),
+                return PlayerListCard(
+                  playerName: data?.homework?.resultsList[index].value.username,
+                  homework: data?.homework,
+                  index: index + 1,
+                  key: ValueKey(data?.playersList[index].key),
                 );
               },
             ),

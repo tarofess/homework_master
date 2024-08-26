@@ -16,6 +16,8 @@ class HomeworkTimerNotifier extends StateNotifier<int> {
   }
 
   void resetTimer() {
+    _timer?.cancel();
+    _timer = null;
     state = 0;
   }
 

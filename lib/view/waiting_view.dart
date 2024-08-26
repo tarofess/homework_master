@@ -5,6 +5,7 @@ import 'package:homework_master/model/room.dart';
 import 'package:homework_master/service/dialog_service.dart';
 import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/view/widget/common_async_widget.dart';
+import 'package:homework_master/view/widget/player_list_card.dart';
 import 'package:homework_master/viewmodel/provider/owner_check_provider.dart';
 import 'package:homework_master/viewmodel/provider/roomid_provider.dart';
 import 'package:homework_master/viewmodel/provider/room_provider.dart';
@@ -83,8 +84,9 @@ class WaitingView extends ConsumerWidget {
             : ListView.builder(
                 itemCount: data.player.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(data.playersList[index].value.name),
+                  return PlayerListCard(
+                    playerName: data.playersList[index].value.name,
+                    key: ValueKey(data.playersList[index].key),
                   );
                 },
               ),
