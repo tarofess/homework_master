@@ -13,16 +13,9 @@ class GoRouterConfig {
         GoRoute(
           name: 'top_view',
           path: '/',
-          builder: (BuildContext context, GoRouterState state) {
-            return TopView();
-          },
-        ),
-        GoRoute(
-          name: 'room_preparation_view',
-          path: '/room_preparation_view',
           pageBuilder: (BuildContext context, GoRouterState state) {
             return CustomTransitionPage(
-              child: RoomPreparationView(),
+              child: TopView(),
               transitionDuration: const Duration(milliseconds: 800),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
@@ -37,6 +30,13 @@ class GoRouterConfig {
                 return SlideTransition(position: offsetAnimation, child: child);
               },
             );
+          },
+        ),
+        GoRoute(
+          name: 'room_preparation_view',
+          path: '/room_preparation_view',
+          builder: (BuildContext context, GoRouterState state) {
+            return RoomPreparationView();
           },
         ),
         GoRoute(

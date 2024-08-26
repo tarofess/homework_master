@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:homework_master/main.dart';
 import 'package:homework_master/model/homework.dart';
 import 'package:homework_master/model/room.dart';
@@ -20,19 +21,24 @@ class RankingView extends ConsumerWidget {
     final roomID = ref.read(roomIDProvider);
 
     return Scaffold(
-      appBar: buildAppBar(context, ref),
+      appBar: buildAppBar(context, ref, roomID),
       body: buildBody(context, ref, roomID),
     );
   }
 
-  AppBar buildAppBar(BuildContext context, WidgetRef ref) {
+  AppBar buildAppBar(BuildContext context, WidgetRef ref, String roomID) {
     final vm = ref.watch(rankingViewModelProvider);
     return AppBar(
       title: const Text('ランキング'),
       leading: IconButton(
-        icon: const Icon(Icons.camera_alt_outlined),
+        icon: const Icon(Icons.share),
         onPressed: () async {
           try {
+            final result = await dialogService.showConfirmationDialog(
+                context, '自慢しよう！', 'ランキングを誰かにシェアしますか？');
+            if (!result) {
+              return;
+            }
             final screenshot = await vm.captureScreenshot(globalKey);
             await vm.saveAndShareScreenshot(screenshot);
           } catch (e) {
@@ -45,7 +51,15 @@ class RankingView extends ConsumerWidget {
       actions: [
         IconButton(
           icon: const Icon(Icons.exit_to_app),
-          onPressed: () {},
+          onPressed: () async {
+            final result = await dialogService.showConfirmationDialog(
+                context, 'お疲れさま！', 'この部屋から退出しますか？');
+            if (!result) {
+              return;
+            }
+            await vm.deleteRoom(roomID);
+            if (context.mounted) context.goNamed('top_view');
+          },
         ),
       ],
     );
@@ -58,11 +72,12 @@ class RankingView extends ConsumerWidget {
           return RepaintBoundary(
             key: globalKey,
             child: ListView.builder(
-              itemCount: data!.playersList.length,
+              itemCount: data?.playersList.length,
               itemBuilder: (context, index) {
                 return ListTile(
                   leading: Text('${index + 1}位'),
-                  title: Text(data.homework!.resultsList[index].value.username),
+                  title: Text(
+                      data?.homework?.resultsList[index].value.username ?? ''),
                 );
               },
             ),
