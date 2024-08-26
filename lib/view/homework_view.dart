@@ -13,6 +13,7 @@ import 'package:homework_master/viewmodel/provider/homework_timer_provider.dart'
 import 'package:homework_master/viewmodel/provider/room_provider.dart';
 import 'package:homework_master/viewmodel/provider/roomid_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class HomeworkView extends HookConsumerWidget {
   final dialogService = getIt<DialogService>();
@@ -59,12 +60,15 @@ class HomeworkView extends HookConsumerWidget {
 
       try {
         initializeEffect();
+        WakelockPlus.enable();
       } catch (e) {
         if (context.mounted) {
           dialogService.showErrorDialog(context, e.toString());
         }
       }
-      return null;
+      return () {
+        WakelockPlus.disable();
+      };
     }, []);
 
     vm.moveToRankigViewIfAllUserFinished(
