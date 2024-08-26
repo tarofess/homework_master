@@ -4,6 +4,7 @@ import 'package:homework_master/main.dart';
 import 'package:homework_master/model/homework.dart';
 import 'package:homework_master/model/room.dart';
 import 'package:homework_master/service/dialog_service.dart';
+import 'package:homework_master/view/widget/bubble_animation.dart';
 import 'package:homework_master/view/widget/common_async_widget.dart';
 import 'package:homework_master/view/widget/player_list_card.dart';
 import 'package:homework_master/viewmodel/provider/room_provider.dart';
@@ -72,17 +73,21 @@ class RankingView extends ConsumerWidget {
         data: (data) {
           return RepaintBoundary(
             key: globalKey,
-            child: ListView.builder(
-              itemCount: data?.homework?.resultsList.length,
-              itemBuilder: (context, index) {
-                return PlayerListCard(
-                  playerName: data?.homework?.resultsList[index].value.username,
-                  homework: data?.homework,
-                  index: index + 1,
-                  key: ValueKey(data?.playersList[index].key),
-                );
-              },
-            ),
+            child: Stack(children: [
+              BubbleAnimation(),
+              ListView.builder(
+                itemCount: data?.homework?.resultsList.length,
+                itemBuilder: (context, index) {
+                  return PlayerListCard(
+                    playerName:
+                        data?.homework?.resultsList[index].value.username,
+                    homework: data?.homework,
+                    index: index + 1,
+                    key: ValueKey(data?.playersList[index].key),
+                  );
+                },
+              ),
+            ]),
           );
         },
         error: (error, stackTrace) => CommonAsyncWidget.showFetchErrorMessage(
