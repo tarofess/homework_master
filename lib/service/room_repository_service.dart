@@ -50,7 +50,7 @@ class RoomRepositoryService {
     });
   }
 
-  Future<void> addResult(String roomID, String userID) async {
+  Future<void> addResult(String roomID, String userID, String username) async {
     final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
     await ref
         .child(roomID)
@@ -59,6 +59,7 @@ class RoomRepositoryService {
         .child(userID)
         .set({
       'clearTime': ServerValue.timestamp,
+      'username': username,
     });
   }
 

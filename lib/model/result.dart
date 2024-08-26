@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:homework_master/model/player.dart';
 
 part 'result.freezed.dart';
 part 'result.g.dart';
@@ -8,6 +7,7 @@ part 'result.g.dart';
 class Result with _$Result {
   const factory Result({
     required int clearTime,
+    required String username,
   }) = _Result;
 
   factory Result.fromJson(Map<String, dynamic> json) => _$ResultFromJson(json);

@@ -14,3 +14,11 @@ class Homework with _$Homework {
   factory Homework.fromJson(Map<String, dynamic> json) =>
       _$HomeworkFromJson(json);
 }
+
+extension HomeworkExtension on Homework {
+  List<MapEntry<String, Result>> get resultsList {
+    final entries = result.entries.toList();
+    entries.sort((a, b) => a.value.clearTime.compareTo(b.value.clearTime));
+    return entries;
+  }
+}

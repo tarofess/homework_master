@@ -11,7 +11,8 @@ class HomeworkViewModel {
 
   Future<void> finishedHomework(String roomID) async {
     final userID = await sharedPreferencesService.getUserID();
-    roomRepositoryService.addResult(roomID, userID!);
+    final username = await sharedPreferencesService.getUsername();
+    roomRepositoryService.addResult(roomID, userID!, username!);
   }
 
   Future<void> undoHomework(String roomID) async {
