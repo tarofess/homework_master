@@ -6,9 +6,11 @@ import 'package:homework_master/service/dialog_service.dart';
 import 'package:homework_master/view/widget/common_async_widget.dart';
 import 'package:homework_master/viewmodel/provider/room_provider.dart';
 import 'package:homework_master/viewmodel/provider/roomid_provider.dart';
+import 'package:homework_master/viewmodel/ranking_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class RankingView extends ConsumerWidget {
+  final GlobalKey globalKey = GlobalKey();
   final dialogService = getIt<DialogService>();
 
   RankingView({super.key});
@@ -18,17 +20,27 @@ class RankingView extends ConsumerWidget {
     final roomID = ref.read(roomIDProvider);
 
     return Scaffold(
-      appBar: buildAppBar(ref),
+      appBar: buildAppBar(context, ref),
       body: buildBody(context, ref, roomID),
     );
   }
 
-  AppBar buildAppBar(WidgetRef ref) {
+  AppBar buildAppBar(BuildContext context, WidgetRef ref) {
+    final vm = ref.watch(rankingViewModelProvider);
     return AppBar(
       title: const Text('ランキング'),
       leading: IconButton(
         icon: const Icon(Icons.camera_alt_outlined),
-        onPressed: () {},
+        onPressed: () async {
+          try {
+            final screenshot = await vm.captureScreenshot(globalKey);
+            await vm.saveAndShareScreenshot(screenshot);
+          } catch (e) {
+            if (context.mounted) {
+              dialogService.showErrorDialog(context, e.toString());
+            }
+          }
+        },
       ),
       actions: [
         IconButton(
@@ -43,14 +55,17 @@ class RankingView extends ConsumerWidget {
     final room = ref.watch(roomProvider(roomID));
     return room.when(
         data: (data) {
-          return ListView.builder(
-            itemCount: data!.playersList.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                leading: Text('${index + 1}位'),
-                title: Text(data.homework!.resultsList[index].value.username),
-              );
-            },
+          return RepaintBoundary(
+            key: globalKey,
+            child: ListView.builder(
+              itemCount: data!.playersList.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: Text('${index + 1}位'),
+                  title: Text(data.homework!.resultsList[index].value.username),
+                );
+              },
+            ),
           );
         },
         error: (error, stackTrace) => CommonAsyncWidget.showFetchErrorMessage(
