@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:homework_master/main.dart';
 import 'package:homework_master/model/room.dart';
 import 'package:homework_master/service/room_repository_service.dart';
@@ -20,6 +21,20 @@ class HomeworkViewModel {
 
   bool isCreatedHomework(Room? room) {
     return room == null || room.homework == null ? true : false;
+  }
+
+  void moveToRankigViewIfAllUserFinished(
+      Room? room, VoidCallback moveToRankingView) {
+    if (isCreatedHomework(room)) {
+      return;
+    }
+
+    bool allKeysContained = room!.player.keys
+        .every((key) => room.homework!.result.containsKey(key));
+
+    if (allKeysContained) {
+      moveToRankingView();
+    }
   }
 }
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:homework_master/main.dart';
-import 'package:homework_master/model/room.dart';
 import 'package:homework_master/service/dialog_service.dart';
 import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/view/widget/blinking_text.dart';
@@ -25,6 +24,7 @@ class HomeworkView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final vm = ref.watch(homeworkViewModelProvider);
     final roomID = ref.read(roomIDProvider);
+    final room = ref.watch(roomProvider(roomID));
     final isEnableFinishButton = useState(false);
     final isShowReadyTextAnimation = useState(false);
     final isShowGoTextAnimation = useState(false);
@@ -67,101 +67,80 @@ class HomeworkView extends HookConsumerWidget {
       return null;
     }, []);
 
+    vm.moveToRankigViewIfAllUserFinished(
+      room.value,
+      () => WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.goNamed('ranking_view');
+      }),
+    );
+
     return Scaffold(
-        body: buildBody(
-      context,
-      vm,
-      ref,
-      roomID,
-      isEnableFinishButton,
-      isShowReadyTextAnimation,
-      isShowGoTextAnimation,
-      isShowTimer,
-      isFinishButtonPressed,
-      buttonColor!,
-    ));
-  }
-
-  Widget buildBody(
-    BuildContext context,
-    HomeworkViewModel vm,
-    WidgetRef ref,
-    String roomID,
-    ValueNotifier<bool> isEnableFinishButton,
-    ValueNotifier<bool> isShowReadyTextAnimation,
-    ValueNotifier<bool> isShowGoTextAnimation,
-    ValueNotifier<bool> isShowTimer,
-    ValueNotifier<bool> isFinishButtonPressed,
-    Color buttonColor,
-  ) {
-    final room = ref.watch(roomProvider(roomID));
-    checkIfAllUserFinishedHomework(context, vm, room.value);
-
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        SafeArea(child: waitingText(isFinishButtonPressed)),
-        Align(
-          alignment: Alignment.center,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: buttonColor,
-              minimumSize: const Size(300, 300),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.horizontal(
-                  left: Radius.circular(20),
-                  right: Radius.circular(20),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          SafeArea(child: waitingText(isFinishButtonPressed)),
+          Align(
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: buttonColor,
+                minimumSize: const Size(300, 300),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.horizontal(
+                    left: Radius.circular(20),
+                    right: Radius.circular(20),
+                  ),
                 ),
+                elevation: 12,
               ),
-              elevation: 12,
-            ),
-            onPressed: isEnableFinishButton.value
-                ? () async {
-                    try {
-                      await handleFinishButtonPressed(
-                        context,
-                        vm,
-                        ref,
-                        roomID,
-                        isFinishButtonPressed,
-                      );
-                    } catch (e) {
-                      if (context.mounted) {
-                        dialogService.showErrorDialog(context, e.toString());
+              onPressed: isEnableFinishButton.value
+                  ? () async {
+                      try {
+                        await handleFinishButtonPressed(
+                          context,
+                          vm,
+                          ref,
+                          roomID,
+                          isFinishButtonPressed,
+                        );
+                      } catch (e) {
+                        if (context.mounted) {
+                          dialogService.showErrorDialog(context, e.toString());
+                        }
                       }
                     }
-                  }
-                : null,
-            child: Text(
-              '宿題終わり！',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge!
-                  .copyWith(fontSize: 30, color: Colors.white),
+                  : null,
+              child: Text(
+                '宿題終わり！',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(fontSize: 30, color: Colors.white),
+              ),
             ),
           ),
-        ),
-        if (isShowTimer.value)
-          const Positioned(
-            left: 0,
-            right: 0,
-            bottom: 50,
-            child: Center(child: HomeworkTimer()),
-          ),
-        if (isShowReadyTextAnimation.value)
-          const HomeworkStartAnimation(
-            text: 'Ready...',
-            fontSize: 40,
-            duration: 1,
-          ),
-        if (isShowGoTextAnimation.value)
-          const HomeworkStartAnimation(
-            text: 'Go!',
-            fontSize: 160,
-            duration: 0,
-          ),
-      ],
+          if (isShowTimer.value)
+            const Positioned(
+              left: 0,
+              right: 0,
+              bottom: 50,
+              child: Center(child: HomeworkTimer()),
+            ),
+          if (isShowReadyTextAnimation.value)
+            const HomeworkStartAnimation(
+              text: 'Ready...',
+              fontSize: 40,
+              duration: 1,
+            ),
+          if (isShowGoTextAnimation.value)
+            const HomeworkStartAnimation(
+              text: 'Go!',
+              fontSize: 160,
+              duration: 0,
+            ),
+        ],
+      ),
     );
   }
 
@@ -207,21 +186,5 @@ class HomeworkView extends HookConsumerWidget {
             ),
           )
         : const SizedBox();
-  }
-
-  void checkIfAllUserFinishedHomework(
-      BuildContext context, HomeworkViewModel vm, Room? room) {
-    if (vm.isCreatedHomework(room)) {
-      return;
-    }
-
-    bool allKeysContained = room!.player.keys
-        .every((key) => room.homework!.result.containsKey(key));
-
-    if (allKeysContained) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.goNamed('ranking_view');
-      });
-    }
   }
 }

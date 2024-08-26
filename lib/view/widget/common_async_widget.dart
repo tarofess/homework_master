@@ -9,7 +9,7 @@ class CommonAsyncWidget {
   }
 
   static Widget showFetchErrorMessage(BuildContext context, WidgetRef ref,
-      AsyncNotifierProvider provider, Object error) {
+      StreamProviderFamily provider, Object error, String roomID) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -36,7 +36,7 @@ class CommonAsyncWidget {
           ElevatedButton(
             onPressed: () {
               // ignore: unused_result
-              ref.refresh(provider);
+              ref.refresh(provider(roomID));
             },
             child: const Text('リトライ'),
           ),
