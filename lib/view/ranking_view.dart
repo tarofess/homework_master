@@ -71,23 +71,26 @@ class RankingView extends ConsumerWidget {
     final room = ref.watch(roomProvider(roomID));
     return room.when(
         data: (data) {
-          return RepaintBoundary(
-            key: globalKey,
-            child: Stack(children: [
-              BubbleAnimation(),
-              ListView.builder(
-                itemCount: data?.homework?.resultsList.length,
-                itemBuilder: (context, index) {
-                  return PlayerListCard(
-                    playerName:
-                        data?.homework?.resultsList[index].value.username,
-                    homework: data?.homework,
-                    index: index + 1,
-                    key: ValueKey(data?.playersList[index].key),
-                  );
-                },
-              ),
-            ]),
+          return Container(
+            color: Colors.white,
+            child: RepaintBoundary(
+              key: globalKey,
+              child: Stack(children: [
+                const BubbleAnimation(),
+                ListView.builder(
+                  itemCount: data?.homework?.resultsList.length,
+                  itemBuilder: (context, index) {
+                    return PlayerListCard(
+                      playerName:
+                          data?.homework?.resultsList[index].value.username,
+                      homework: data?.homework,
+                      index: index + 1,
+                      key: ValueKey(data?.playersList[index].key),
+                    );
+                  },
+                ),
+              ]),
+            ),
           );
         },
         error: (error, stackTrace) => CommonAsyncWidget.showFetchErrorMessage(

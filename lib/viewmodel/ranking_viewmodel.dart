@@ -15,7 +15,16 @@ class RankingViewModel {
     RenderRepaintBoundary boundary =
         globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
     ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-    return image;
+
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder,
+        Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()));
+
+    canvas.drawColor(Colors.white, BlendMode.src);
+    canvas.drawImage(image, Offset.zero, Paint());
+
+    final picture = recorder.endRecording();
+    return await picture.toImage(image.width, image.height);
   }
 
   Future<void> saveAndShareScreenshot(ui.Image image) async {
