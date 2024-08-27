@@ -19,18 +19,19 @@ class RoomRepositoryService {
     await ref.child(roomID).remove();
   }
 
-  Future<void> addPlayer(String roomID, String username, String userID) async {
+  Future<void> addPlayer(
+      String roomID, String playerName, String playerID) async {
     final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
     await ref
         .child(roomID)
         .child('player')
-        .child(userID)
-        .set({'name': username});
+        .child(playerID)
+        .set({'name': playerName});
   }
 
-  Future<void> removePlayer(String roomID, String userID) async {
+  Future<void> removePlayer(String roomID, String playerID) async {
     final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
-    await ref.child(roomID).child('player').child(userID).remove();
+    await ref.child(roomID).child('player').child(playerID).remove();
   }
 
   Future<bool> isExistRoomID(String roomID) async {
@@ -50,26 +51,27 @@ class RoomRepositoryService {
     });
   }
 
-  Future<void> addResult(String roomID, String userID, String username) async {
+  Future<void> addResult(
+      String roomID, String playerID, String playerName) async {
     final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
     await ref
         .child(roomID)
         .child('homework')
         .child('result')
-        .child(userID)
+        .child(playerID)
         .set({
       'clearTime': ServerValue.timestamp,
-      'username': username,
+      'playerName': playerName,
     });
   }
 
-  Future<void> removeResult(String roomID, String userID) async {
+  Future<void> removeResult(String roomID, String playerID) async {
     final DatabaseReference ref = FirebaseDatabase.instance.ref('room');
     await ref
         .child(roomID)
         .child('homework')
         .child('result')
-        .child(userID)
+        .child(playerID)
         .remove();
   }
 }

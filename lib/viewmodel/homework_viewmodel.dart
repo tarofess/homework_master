@@ -10,21 +10,21 @@ class HomeworkViewModel {
   final sharedPreferencesService = getIt<SharedPreferencesService>();
 
   Future<void> finishedHomework(String roomID) async {
-    final userID = await sharedPreferencesService.getUserID();
-    final username = await sharedPreferencesService.getUsername();
-    roomRepositoryService.addResult(roomID, userID!, username!);
+    final playerID = await sharedPreferencesService.getPlayerID();
+    final playerName = await sharedPreferencesService.getPlayerName();
+    roomRepositoryService.addResult(roomID, playerID!, playerName!);
   }
 
   Future<void> undoHomework(String roomID) async {
-    final userID = await sharedPreferencesService.getUserID();
-    roomRepositoryService.removeResult(roomID, userID!);
+    final playerID = await sharedPreferencesService.getPlayerID();
+    roomRepositoryService.removeResult(roomID, playerID!);
   }
 
   bool isCreatedHomework(Room? room) {
     return room == null || room.homework == null ? true : false;
   }
 
-  void moveToRankigViewIfAllUserFinished(
+  void moveToRankigViewIfAllPlayerFinished(
       Room? room, VoidCallback moveToRankingView) {
     if (isCreatedHomework(room)) {
       return;

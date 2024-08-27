@@ -6,8 +6,8 @@ class TopViewModel {
   final sharedPreferencesService = getIt<SharedPreferencesService>();
 
   Future<bool> isFirstLaunch() async {
-    final username = await sharedPreferencesService.getUsername();
-    return username == null ? true : false;
+    final playerName = await sharedPreferencesService.getPlayerName();
+    return playerName == null ? true : false;
   }
 }
 

@@ -13,10 +13,10 @@ class WaitingViewModel {
   }
 
   Future<void> leaveRoom(String roomID) async {
-    final userID = await sharedPreferencesService.getUserID();
-    if (userID == null) return;
+    final playerID = await sharedPreferencesService.getPlayerID();
+    if (playerID == null) return;
 
-    await roomRepositoryService.removePlayer(roomID, userID);
+    await roomRepositoryService.removePlayer(roomID, playerID);
   }
 
   bool isRoomStateReady(Room? room) {

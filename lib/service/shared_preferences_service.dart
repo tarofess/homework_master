@@ -1,23 +1,23 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesService {
-  Future<String?> getUsername() async {
+  Future<String?> getPlayerName() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('Username');
+    return prefs.getString('PlayerName');
   }
 
-  Future<void> saveUsername(String username) async {
+  Future<void> savePlayerName(String playerName) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('Username', username);
+    await prefs.setString('PlayerName', playerName);
   }
 
-  Future<String?> getUserID() async {
+  Future<String?> getPlayerID() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('UserID');
+    return prefs.getString('PlayerID');
   }
 
-  Future<void> saveUserID(String userID) async {
+  Future<void> savePlayerID(String playerID) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('UserID', userID);
+    await prefs.setString('PlayerID', playerID);
   }
 }

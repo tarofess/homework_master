@@ -27,7 +27,7 @@ class TopView extends ConsumerWidget {
     return GestureDetector(
       onTap: () async {
         if (await vm.isFirstLaunch()) {
-          if (context.mounted) await registerUsername(context, vm);
+          if (context.mounted) await registerPlayerName(context, vm);
         } else {
           if (context.mounted) context.goNamed('room_preparation_view');
         }
@@ -97,17 +97,17 @@ class TopView extends ConsumerWidget {
     );
   }
 
-  Future<void> registerUsername(BuildContext context, TopViewModel vm) async {
-    final username = await dialogService.showNameRegistrationDialog(context);
+  Future<void> registerPlayerName(BuildContext context, TopViewModel vm) async {
+    final playerName = await dialogService.showNameRegistrationDialog(context);
     if (context.mounted) {
       final isSuccess = await dialogService.showConfirmationDialog(
         context,
-        username!,
+        playerName!,
         '一度登録すると変更できませんが、この名前でよろしいですか？',
       );
       if (context.mounted && isSuccess) {
         try {
-          await sharedPreferencesService.saveUsername(username);
+          await sharedPreferencesService.savePlayerName(playerName);
           if (context.mounted) context.goNamed('room_preparation_view');
         } catch (e) {
           if (context.mounted) {

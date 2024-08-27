@@ -35,10 +35,10 @@ class RoomPreparationViewModel {
   }
 
   Future<void> addPlayerToRoom(String roomID) async {
-    final username = await sharedPreferencesService.getUsername();
-    final userID = const Uuid().v4();
-    await roomRepositoryService.addPlayer(roomID, username!, userID);
-    await sharedPreferencesService.saveUserID(userID);
+    final playerName = await sharedPreferencesService.getPlayerName();
+    final playerID = const Uuid().v4();
+    await roomRepositoryService.addPlayer(roomID, playerName!, playerID);
+    await sharedPreferencesService.savePlayerID(playerID);
   }
 
   String generateRoomID() {
