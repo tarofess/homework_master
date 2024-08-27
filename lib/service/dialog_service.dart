@@ -89,38 +89,43 @@ class DialogService {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green[500],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.green[500],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                     ),
-                  ),
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(
-                    'いいえ',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontSize: 18),
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: Text(
+                      'いいえ',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontSize: 18),
+                    ),
                   ),
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green[500],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.green[500],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                     ),
-                  ),
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(
-                    'はい',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontSize: 18),
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: Text(
+                      'はい',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontSize: 18),
+                    ),
                   ),
                 ),
               ],
@@ -194,11 +199,11 @@ class DialogService {
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge!
-                          .copyWith(fontSize: 14),
+                          .copyWith(fontSize: 18),
                     ),
                   ),
                 ),
-                SizedBox(width: 8), // ボタン間のスペース
+                const SizedBox(width: 8),
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -218,7 +223,7 @@ class DialogService {
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge!
-                          .copyWith(fontSize: 14),
+                          .copyWith(fontSize: 18),
                     ),
                   ),
                 ),
@@ -291,7 +296,7 @@ class DialogService {
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge!
-                              .copyWith(fontSize: 14),
+                              .copyWith(fontSize: 18),
                         ),
                       ),
                     ),
@@ -328,7 +333,7 @@ class DialogService {
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge!
-                              .copyWith(fontSize: 14),
+                              .copyWith(fontSize: 18),
                         ),
                       ),
                     ),
