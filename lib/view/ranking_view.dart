@@ -70,29 +70,28 @@ class RankingView extends ConsumerWidget {
   Widget buildBody(BuildContext context, WidgetRef ref, String roomID) {
     final room = ref.watch(roomProvider(roomID));
     return room.when(
-        data: (data) {
-          return Container(
-            color: Colors.white,
-            child: RepaintBoundary(
-              key: globalKey,
-              child: Stack(children: [
-                const BubbleAnimation(),
-                ListView.builder(
-                  itemCount: data?.homework?.resultsList.length,
-                  itemBuilder: (context, index) {
-                    return PlayerListCard(
-                      playerName: data
-                          ?.player[data.homework?.resultsList[index].key]?.name,
-                      room: data,
-                      index: index,
-                      key: ValueKey(data?.playersList[index].key),
-                    );
-                  },
+        data: (data) => data == null
+            ? const SizedBox()
+            : Container(
+                color: Colors.white,
+                child: RepaintBoundary(
+                  key: globalKey,
+                  child: Stack(children: [
+                    const BubbleAnimation(),
+                    ListView.builder(
+                      itemCount: data.homework?.resultsList.length,
+                      itemBuilder: (context, index) {
+                        return PlayerListCard(
+                          type: PlayerListCardType.ranking,
+                          room: data,
+                          index: index,
+                          key: ValueKey(data.playersList[index].key),
+                        );
+                      },
+                    ),
+                  ]),
                 ),
-              ]),
-            ),
-          );
-        },
+              ),
         error: (error, stackTrace) => CommonAsyncWidget.showFetchErrorMessage(
             context, ref, roomProvider, error, roomID),
         loading: () => CommonAsyncWidget.showLoadingIndicator());

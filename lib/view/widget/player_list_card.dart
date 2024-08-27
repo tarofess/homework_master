@@ -3,12 +3,12 @@ import 'package:homework_master/model/homework.dart';
 import 'package:homework_master/model/room.dart';
 
 class PlayerListCard extends StatelessWidget {
-  final String? playerName;
-  final Room? room;
-  final int? index;
+  final PlayerListCardType type;
+  final Room room;
+  final int index;
 
   const PlayerListCard(
-      {super.key, required this.playerName, required this.room, this.index});
+      {super.key, required this.type, required this.room, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -18,25 +18,29 @@ class PlayerListCard extends StatelessWidget {
       child: ListTile(
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-        leading: index == null
+        leading: type == PlayerListCardType.waiting
             ? null
             : Text(
-                '${index! + 1}位',
+                '${index + 1}位',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Colors.black,
                       fontSize: 22,
                     ),
               ),
-        title: Text(playerName ?? '',
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                )),
-        trailing: index == null
+        title: Text(
+          type == PlayerListCardType.waiting
+              ? room.playersList[index].value.name
+              : room.player[room.homework!.resultsList[index].key]!.name,
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+              ),
+        ),
+        trailing: type == PlayerListCardType.waiting
             ? null
             : Text(
-                room?.homework?.getFormattedClearTime(
-                        room?.homework?.resultsList[index!].value.clearTime) ??
+                room.homework?.getFormattedClearTime(
+                        room.homework?.resultsList[index].value.clearTime) ??
                     '',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Colors.black,
@@ -47,3 +51,5 @@ class PlayerListCard extends StatelessWidget {
     );
   }
 }
+
+enum PlayerListCardType { ranking, waiting }
