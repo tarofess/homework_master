@@ -4,135 +4,96 @@ import 'package:homework_master/view/widget/loading_overlay.dart';
 class DialogService {
   Future<String?> showNameRegistrationDialog(BuildContext context) async {
     final TextEditingController textController = TextEditingController();
-    bool isButtonEnabled = false;
-
-    return showDialog<String>(
+    return await showInputTextDialogBase(
       context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: Text(
-                '名前を登録',
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center,
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    textAlign: TextAlign.center,
-                    controller: textController,
-                    decoration: InputDecoration(
-                      hintText: '名前を入力してください',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                    style: const TextStyle(color: Colors.black),
-                    onChanged: (value) {
-                      setState(() {
-                        isButtonEnabled = value.isNotEmpty;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              actions: [
-                Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.green[500],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    onPressed: isButtonEnabled
-                        ? () => Navigator.of(context).pop(textController.text)
-                        : null,
-                    child: Text(
-                      '登録',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(fontSize: 18),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
+      title: '名前を登録',
+      hintText: '名前を入力してください',
+      okButtonText: '登録',
+      cancelButtonText: 'キャンセル',
+      textController: textController,
+      handleOKButtonPress: (dialogContext) =>
+          Navigator.of(dialogContext).pop(textController.text),
+      handleCancelButtonPress: (dialogContext) =>
+          Navigator.of(dialogContext).pop(null),
     );
+  }
+
+  Future<String?> showEnterRoomNameDialog(BuildContext context,
+      Future<bool> Function(String roomName) handleEnterRoom) async {
+    final TextEditingController textController = TextEditingController();
+    return await showInputTextDialogBase(
+        context: context,
+        title: '入室',
+        hintText: 'ルーム名を入力してください',
+        okButtonText: '送信',
+        cancelButtonText: 'キャンセル',
+        textController: TextEditingController(),
+        handleOKButtonPress: (dialogContext) async {
+          final isSuccess = await LoadingOverlay.of(dialogContext)
+              .during(() => handleEnterRoom(textController.text));
+          if (isSuccess) {
+            if (dialogContext.mounted) {
+              Navigator.of(dialogContext).pop(textController.text);
+            }
+          } else {
+            if (dialogContext.mounted) {
+              Navigator.of(dialogContext).pop('');
+            }
+          }
+        },
+        handleCancelButtonPress: (dialogContext) =>
+            Navigator.of(dialogContext).pop(null));
+  }
+
+  Future<String> showMakeRoomDialog(
+      BuildContext context, Future<String> Function() handleMakeRoom) async {
+    final result = await showConfirmationDialogBase(
+      context: context,
+      title: '部屋の作成',
+      content: '新しく部屋を作成しますか？',
+      okButtonText: '作成する',
+      cancelButtonText: 'いいえ',
+      handleOKButtonPress: (dialogContext) async {
+        final roomID = await LoadingOverlay.of(dialogContext)
+            .during(() => handleMakeRoom());
+        if (dialogContext.mounted) Navigator.of(dialogContext).pop(roomID);
+      },
+      handleCancelButtonPress: (dialogContext) =>
+          Navigator.of(dialogContext).pop(''),
+    );
+    return result ?? '';
   }
 
   Future<bool> showConfirmationDialog(
       BuildContext context, String title, String content) async {
-    final result = await showDialog<bool>(
+    final result = await showConfirmationDialogBase(
       context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            title,
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(color: Colors.black),
-            textAlign: TextAlign.center,
-          ),
-          content: Text(content),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.green[500],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: Text(
-                      'いいえ',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(fontSize: 18),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.green[500],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: Text(
-                      'はい',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(fontSize: 18),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        );
+      title: title,
+      content: content,
+      okButtonText: 'はい',
+      cancelButtonText: 'いいえ',
+      handleOKButtonPress: (dialogContext) =>
+          Navigator.of(dialogContext).pop(true),
+      handleCancelButtonPress: (dialogContext) =>
+          Navigator.of(dialogContext).pop(false),
+    );
+    return result ?? false;
+  }
+
+  Future<bool> showLeaveDialog(
+      BuildContext context, String message, Function() leaveAction) async {
+    final result = await showConfirmationDialogBase(
+      context: context,
+      title: '確認',
+      content: message,
+      okButtonText: 'はい',
+      cancelButtonText: 'いいえ',
+      handleOKButtonPress: (dialogContext) async {
+        await LoadingOverlay.of(dialogContext).during(() => leaveAction());
+        if (dialogContext.mounted) Navigator.of(dialogContext).pop(true);
       },
+      handleCancelButtonPress: (dialogContext) =>
+          Navigator.of(dialogContext).pop(false),
     );
     return result ?? false;
   }
@@ -168,77 +129,16 @@ class DialogService {
     );
   }
 
-  Future<String> showMakeRoomDialog(
-      BuildContext context, Future<String> Function() handleMakeRoom) async {
-    final result = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            '部屋の作成',
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-          content: const Text('新しく部屋を作成しますか？'),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.green[500],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    onPressed: () => Navigator.of(context).pop(''),
-                    child: Text(
-                      'いいえ',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(fontSize: 18),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.green[500],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    onPressed: () async {
-                      final roomID = await LoadingOverlay.of(context)
-                          .during(() => handleMakeRoom());
-                      if (context.mounted) Navigator.of(context).pop(roomID);
-                    },
-                    child: Text(
-                      '作成する',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(fontSize: 18),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-    return result ?? '';
-  }
-
-  Future<String?> showEnterRoomNameDialog(BuildContext context,
-      Future<bool> Function(String roomName) handleEnterRoom) async {
-    final TextEditingController textController = TextEditingController();
+  Future<String?> showInputTextDialogBase({
+    required BuildContext context,
+    required String title,
+    String? hintText,
+    required String okButtonText,
+    required String cancelButtonText,
+    required TextEditingController textController,
+    required Function(BuildContext dialogContext) handleOKButtonPress,
+    required Function(BuildContext dialogContext) handleCancelButtonPress,
+  }) async {
     bool isButtonEnabled = false;
 
     return await showDialog(
@@ -248,7 +148,7 @@ class DialogService {
           builder: (context, setState) {
             return AlertDialog(
               title: Text(
-                '入室',
+                title,
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
@@ -262,7 +162,7 @@ class DialogService {
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.only(
                             left: 20, right: 20, bottom: 20),
-                        hintText: 'ルームIDを入力してください',
+                        hintText: hintText ?? '',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
@@ -290,9 +190,9 @@ class DialogService {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                        onPressed: () => Navigator.of(context).pop(null),
+                        onPressed: () => handleCancelButtonPress(context),
                         child: Text(
-                          'キャンセル',
+                          cancelButtonText,
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge!
@@ -311,25 +211,10 @@ class DialogService {
                           ),
                         ),
                         onPressed: isButtonEnabled
-                            ? () async {
-                                final isSuccess =
-                                    await LoadingOverlay.of(context).during(
-                                  () => handleEnterRoom(textController.text),
-                                );
-                                if (isSuccess) {
-                                  if (context.mounted) {
-                                    Navigator.of(context)
-                                        .pop(textController.text);
-                                  }
-                                } else {
-                                  if (context.mounted) {
-                                    Navigator.of(context).pop('');
-                                  }
-                                }
-                              }
+                            ? () async => await handleOKButtonPress(context)
                             : null,
                         child: Text(
-                          '送信',
+                          okButtonText,
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge!
@@ -347,51 +232,69 @@ class DialogService {
     );
   }
 
-  Future<bool> showLeaveDialog(
-      BuildContext context, String message, Function() leaveAction) async {
-    final result = await showDialog(
+  Future<T?> showConfirmationDialogBase<T>({
+    required BuildContext context,
+    required String title,
+    required String content,
+    required String okButtonText,
+    required String cancelButtonText,
+    required Function(BuildContext dialogContext) handleOKButtonPress,
+    required Function(BuildContext dialogContext) handleCancelButtonPress,
+  }) async {
+    return await showDialog<T?>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text(
-            '確認',
+          title: Text(
+            title,
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(color: Colors.black),
             textAlign: TextAlign.center,
           ),
-          content: Text(message),
+          content: Text(content),
           actions: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green[500],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.green[500],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                     ),
-                  ),
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text(
-                    'いいえ',
-                    style: TextStyle(fontSize: 18),
+                    onPressed: () => handleCancelButtonPress(context),
+                    child: Text(
+                      cancelButtonText,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontSize: 18),
+                    ),
                   ),
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green[500],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.green[500],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                     ),
-                  ),
-                  onPressed: () async {
-                    await LoadingOverlay.of(context)
-                        .during(() => leaveAction());
-                    if (context.mounted) Navigator.of(context).pop(true);
-                  },
-                  child: const Text(
-                    'はい',
-                    style: TextStyle(fontSize: 18),
+                    onPressed: () async => await handleOKButtonPress(context),
+                    child: Text(
+                      okButtonText,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontSize: 18),
+                    ),
                   ),
                 ),
               ],
@@ -400,6 +303,5 @@ class DialogService {
         );
       },
     );
-    return result ?? false;
   }
 }

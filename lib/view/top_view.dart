@@ -99,10 +99,10 @@ class TopView extends ConsumerWidget {
 
   Future<void> registerPlayerName(BuildContext context, TopViewModel vm) async {
     final playerName = await dialogService.showNameRegistrationDialog(context);
-    if (context.mounted) {
+    if (playerName != null && context.mounted) {
       final isSuccess = await dialogService.showConfirmationDialog(
         context,
-        playerName!,
+        playerName,
         '一度登録すると変更できませんが、この名前でよろしいですか？',
       );
       if (context.mounted && isSuccess) {
