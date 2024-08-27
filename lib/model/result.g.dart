@@ -8,11 +8,9 @@ part of 'result.dart';
 
 _$ResultImpl _$$ResultImplFromJson(Map<String, dynamic> json) => _$ResultImpl(
       clearTime: (json['clearTime'] as num).toInt(),
-      username: json['username'] as String,
     );
 
 Map<String, dynamic> _$$ResultImplToJson(_$ResultImpl instance) =>
     <String, dynamic>{
       'clearTime': instance.clearTime,
-      'username': instance.username,
     };

@@ -21,7 +21,6 @@ Result _$ResultFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Result {
   int get clearTime => throw _privateConstructorUsedError;
-  String get username => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -33,7 +32,7 @@ abstract class $ResultCopyWith<$Res> {
   factory $ResultCopyWith(Result value, $Res Function(Result) then) =
       _$ResultCopyWithImpl<$Res, Result>;
   @useResult
-  $Res call({int clearTime, String username});
+  $Res call({int clearTime});
 }
 
 /// @nodoc
@@ -50,17 +49,12 @@ class _$ResultCopyWithImpl<$Res, $Val extends Result>
   @override
   $Res call({
     Object? clearTime = null,
-    Object? username = null,
   }) {
     return _then(_value.copyWith(
       clearTime: null == clearTime
           ? _value.clearTime
           : clearTime // ignore: cast_nullable_to_non_nullable
               as int,
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String,
     ) as $Val);
   }
 }
@@ -72,7 +66,7 @@ abstract class _$$ResultImplCopyWith<$Res> implements $ResultCopyWith<$Res> {
       __$$ResultImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int clearTime, String username});
+  $Res call({int clearTime});
 }
 
 /// @nodoc
@@ -87,17 +81,12 @@ class __$$ResultImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? clearTime = null,
-    Object? username = null,
   }) {
     return _then(_$ResultImpl(
       clearTime: null == clearTime
           ? _value.clearTime
           : clearTime // ignore: cast_nullable_to_non_nullable
               as int,
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String,
     ));
   }
 }
@@ -105,19 +94,17 @@ class __$$ResultImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ResultImpl implements _Result {
-  const _$ResultImpl({required this.clearTime, required this.username});
+  const _$ResultImpl({required this.clearTime});
 
   factory _$ResultImpl.fromJson(Map<String, dynamic> json) =>
       _$$ResultImplFromJson(json);
 
   @override
   final int clearTime;
-  @override
-  final String username;
 
   @override
   String toString() {
-    return 'Result(clearTime: $clearTime, username: $username)';
+    return 'Result(clearTime: $clearTime)';
   }
 
   @override
@@ -126,14 +113,12 @@ class _$ResultImpl implements _Result {
         (other.runtimeType == runtimeType &&
             other is _$ResultImpl &&
             (identical(other.clearTime, clearTime) ||
-                other.clearTime == clearTime) &&
-            (identical(other.username, username) ||
-                other.username == username));
+                other.clearTime == clearTime));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, clearTime, username);
+  int get hashCode => Object.hash(runtimeType, clearTime);
 
   @JsonKey(ignore: true)
   @override
@@ -150,16 +135,12 @@ class _$ResultImpl implements _Result {
 }
 
 abstract class _Result implements Result {
-  const factory _Result(
-      {required final int clearTime,
-      required final String username}) = _$ResultImpl;
+  const factory _Result({required final int clearTime}) = _$ResultImpl;
 
   factory _Result.fromJson(Map<String, dynamic> json) = _$ResultImpl.fromJson;
 
   @override
   int get clearTime;
-  @override
-  String get username;
   @override
   @JsonKey(ignore: true)
   _$$ResultImplCopyWith<_$ResultImpl> get copyWith =>

@@ -81,10 +81,10 @@ class RankingView extends ConsumerWidget {
                   itemCount: data?.homework?.resultsList.length,
                   itemBuilder: (context, index) {
                     return PlayerListCard(
-                      playerName:
-                          data?.homework?.resultsList[index].value.username,
-                      homework: data?.homework,
-                      index: index + 1,
+                      playerName: data
+                          ?.player[data.homework?.resultsList[index].key]?.name,
+                      room: data,
+                      index: index,
                       key: ValueKey(data?.playersList[index].key),
                     );
                   },

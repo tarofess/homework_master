@@ -22,14 +22,17 @@ extension HomeworkExtension on Homework {
     return entries;
   }
 
-  String get formattedClearTime {
-    int timestamp1 = startTime;
-    int timestamp2 = result.values.first.clearTime;
+  String? getFormattedClearTime(int? clearTime) {
+    if (clearTime == null) {
+      return null;
+    }
     int adjustedValue = 3000; // startTimeが記録されてタイマーが作動するまで3秒間のアニメーションがあるため
     Duration difference =
-        Duration(milliseconds: timestamp2 - timestamp1 - adjustedValue);
+        Duration(milliseconds: clearTime - startTime - adjustedValue);
     int minutes = difference.inMinutes;
     double seconds = (difference.inMilliseconds % 60000) / 1000;
-    return '$minutes分${seconds.toStringAsFixed(2)}秒';
+    return minutes == 0
+        ? '${seconds.toStringAsFixed(2)}秒'
+        : '$minutes分${seconds.toStringAsFixed(2)}秒';
   }
 }

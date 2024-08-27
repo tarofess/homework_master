@@ -7,7 +7,6 @@ part 'result.g.dart';
 class Result with _$Result {
   const factory Result({
     required int clearTime,
-    required String username,
   }) = _Result;
 
   factory Result.fromJson(Map<String, dynamic> json) => _$ResultFromJson(json);

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:homework_master/model/homework.dart';
+import 'package:homework_master/model/room.dart';
 
 class PlayerListCard extends StatelessWidget {
   final String? playerName;
-  final Homework? homework;
+  final Room? room;
   final int? index;
 
   const PlayerListCard(
-      {super.key, required this.playerName, this.homework, this.index});
+      {super.key, required this.playerName, required this.room, this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class PlayerListCard extends StatelessWidget {
         leading: index == null
             ? null
             : Text(
-                '$index位',
+                '${index! + 1}位',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Colors.black,
                       fontSize: 22,
@@ -34,7 +35,9 @@ class PlayerListCard extends StatelessWidget {
         trailing: index == null
             ? null
             : Text(
-                homework?.formattedClearTime ?? '',
+                room?.homework?.getFormattedClearTime(
+                        room?.homework?.resultsList[index!].value.clearTime) ??
+                    '',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Colors.black,
                       fontSize: 20,

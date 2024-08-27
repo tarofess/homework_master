@@ -86,6 +86,7 @@ class WaitingView extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   return PlayerListCard(
                     playerName: data.playersList[index].value.name,
+                    room: data,
                     key: ValueKey(data.playersList[index].key),
                   );
                 },
