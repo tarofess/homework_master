@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:homework_master/service/dialog_service.dart';
+import 'package:homework_master/service/error_handling_service.dart';
 import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/service/shared_preferences_service.dart';
 import 'package:homework_master/view/widget/app_theme.dart';
@@ -105,4 +106,5 @@ void setupGetIt() {
   getIt.registerLazySingleton(() => SharedPreferencesService());
   getIt.registerLazySingleton(() => DialogService());
   getIt.registerLazySingleton(() => RoomRepositoryService());
+  getIt.registerLazySingleton(() => ErrorHandlingService());
 }

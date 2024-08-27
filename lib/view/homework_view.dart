@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:homework_master/main.dart';
 import 'package:homework_master/service/dialog_service.dart';
+import 'package:homework_master/service/error_handling_service.dart';
 import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/view/widget/blinking_text.dart';
 import 'package:homework_master/view/widget/homework_start_animation.dart';
@@ -18,6 +19,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 class HomeworkView extends HookConsumerWidget {
   final dialogService = getIt<DialogService>();
   final roomRepositoryService = getIt<RoomRepositoryService>();
+  final errorHandlingService = getIt<ErrorHandlingService>();
 
   HomeworkView({super.key});
 
@@ -63,7 +65,7 @@ class HomeworkView extends HookConsumerWidget {
         WakelockPlus.enable();
       } catch (e) {
         if (context.mounted) {
-          dialogService.showErrorDialog(context, e.toString());
+          errorHandlingService.handleError(e, context);
         }
       }
       return () {
@@ -111,7 +113,7 @@ class HomeworkView extends HookConsumerWidget {
                         );
                       } catch (e) {
                         if (context.mounted) {
-                          dialogService.showErrorDialog(context, e.toString());
+                          errorHandlingService.handleError(e, context);
                         }
                       }
                     }

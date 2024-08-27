@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:homework_master/main.dart';
 import 'package:homework_master/service/dialog_service.dart';
+import 'package:homework_master/service/error_handling_service.dart';
 import 'package:homework_master/service/shared_preferences_service.dart';
 import 'package:homework_master/viewmodel/top_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TopView extends ConsumerWidget {
   final sharedPreferencesService = getIt<SharedPreferencesService>();
-  final dialogService = GetIt.instance<DialogService>();
+  final dialogService = getIt<DialogService>();
+  final errorHandlingService = getIt<ErrorHandlingService>();
 
   TopView({super.key});
 
@@ -111,7 +112,7 @@ class TopView extends ConsumerWidget {
           if (context.mounted) context.goNamed('room_preparation_view');
         } catch (e) {
           if (context.mounted) {
-            dialogService.showErrorDialog(context, '名前の保存中にエラーが発生しました');
+            errorHandlingService.handleError(e, context);
           }
         }
       }

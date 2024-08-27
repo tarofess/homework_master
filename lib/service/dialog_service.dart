@@ -27,7 +27,7 @@ class DialogService {
         hintText: 'ルーム名を入力してください',
         okButtonText: '送信',
         cancelButtonText: 'キャンセル',
-        textController: TextEditingController(),
+        textController: textController,
         handleOKButtonPress: (dialogContext) async {
           final isSuccess = await LoadingOverlay.of(dialogContext)
               .during(() => handleEnterRoom(textController.text));
@@ -98,14 +98,18 @@ class DialogService {
     return result ?? false;
   }
 
-  Future<void> showErrorDialog(BuildContext context, String message) async {
+  Future<void> showErrorDialog(
+      BuildContext context, String title, String content) async {
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('エラーが発生しました'),
-          content: Text(message),
+          title: Text(
+            title,
+            textAlign: TextAlign.center,
+          ),
+          content: Text(content),
           actions: [
             Center(
               child: ElevatedButton(

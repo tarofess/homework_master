@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:homework_master/main.dart';
 import 'package:homework_master/model/room.dart';
 import 'package:homework_master/service/dialog_service.dart';
+import 'package:homework_master/service/error_handling_service.dart';
 import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/view/widget/common_async_widget.dart';
 import 'package:homework_master/view/widget/player_list_card.dart';
@@ -15,6 +16,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class WaitingView extends ConsumerWidget {
   final dialogService = getIt<DialogService>();
   final roomRepositoryService = getIt<RoomRepositoryService>();
+  final errorHandlingService = getIt<ErrorHandlingService>();
 
   WaitingView({super.key});
 
@@ -41,7 +43,7 @@ class WaitingView extends ConsumerWidget {
             await handleRoomExit(context, vm, isOwner, roomID);
           } catch (e) {
             if (context.mounted) {
-              dialogService.showErrorDialog(context, e.toString());
+              errorHandlingService.handleError(e, context);
             }
           }
         },
@@ -56,7 +58,7 @@ class WaitingView extends ConsumerWidget {
                 await handleRoomReadyConfirmation(context, vm, roomID);
               } catch (e) {
                 if (context.mounted) {
-                  dialogService.showErrorDialog(context, e.toString());
+                  errorHandlingService.handleError(e, context);
                 }
               }
             },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:homework_master/main.dart';
 import 'package:homework_master/service/dialog_service.dart';
+import 'package:homework_master/service/error_handling_service.dart';
 import 'package:homework_master/viewmodel/provider/owner_check_provider.dart';
 import 'package:homework_master/viewmodel/provider/roomid_provider.dart';
 import 'package:homework_master/viewmodel/room_preparation_viewmodel.dart';
@@ -9,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class RoomPreparationView extends ConsumerWidget {
   final dialogService = getIt<DialogService>();
+  final errorHandlingService = getIt<ErrorHandlingService>();
 
   RoomPreparationView({super.key});
 
@@ -60,7 +62,7 @@ class RoomPreparationView extends ConsumerWidget {
               await makeRoom(context, ref, vm);
             } catch (e) {
               if (context.mounted) {
-                await dialogService.showErrorDialog(context, e.toString());
+                errorHandlingService.handleError(e, context);
               }
             }
           },
@@ -98,7 +100,7 @@ class RoomPreparationView extends ConsumerWidget {
               await enterWaitingRoom(context, ref, vm);
             } catch (e) {
               if (context.mounted) {
-                await dialogService.showErrorDialog(context, e.toString());
+                errorHandlingService.handleError(e, context);
               }
             }
           },
@@ -133,9 +135,7 @@ class RoomPreparationView extends ConsumerWidget {
         context.pushNamed('waiting_view');
       }
     } else if (vm.isRoomIdNotFound(roomID)) {
-      if (context.mounted) {
-        dialogService.showErrorDialog(context, 'そのような部屋は見つかりませんでした');
-      }
+      throw Exception('そのような部屋は見つかりませんでした');
     }
   }
 }

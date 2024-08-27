@@ -4,6 +4,7 @@ import 'package:homework_master/main.dart';
 import 'package:homework_master/model/homework.dart';
 import 'package:homework_master/model/room.dart';
 import 'package:homework_master/service/dialog_service.dart';
+import 'package:homework_master/service/error_handling_service.dart';
 import 'package:homework_master/view/widget/bubble_animation.dart';
 import 'package:homework_master/view/widget/common_async_widget.dart';
 import 'package:homework_master/view/widget/player_list_card.dart';
@@ -15,6 +16,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class RankingView extends ConsumerWidget {
   final GlobalKey globalKey = GlobalKey();
   final dialogService = getIt<DialogService>();
+  final errorHandlingService = getIt<ErrorHandlingService>();
 
   RankingView({super.key});
 
@@ -45,7 +47,7 @@ class RankingView extends ConsumerWidget {
             await vm.saveAndShareScreenshot(screenshot);
           } catch (e) {
             if (context.mounted) {
-              dialogService.showErrorDialog(context, e.toString());
+              errorHandlingService.handleError(e, context);
             }
           }
         },
