@@ -37,10 +37,6 @@ class RankingViewModel {
 
     await Share.shareXFiles([XFile(file.path)]);
   }
-
-  Future<void> deleteRoom(String roomID) async {
-    await roomRepositoryService.deleteRoom(roomID);
-  }
 }
 
 final rankingViewModelProvider = Provider((ref) => RankingViewModel());

@@ -56,11 +56,9 @@ class RankingView extends ConsumerWidget {
           onPressed: () async {
             final result = await dialogService.showConfirmationDialog(
                 context, 'お疲れさま！', 'この部屋から退出しますか？');
-            if (!result) {
-              return;
+            if (result) {
+              if (context.mounted) context.goNamed('top_view');
             }
-            await vm.deleteRoom(roomID);
-            if (context.mounted) context.goNamed('top_view');
           },
         ),
       ],
