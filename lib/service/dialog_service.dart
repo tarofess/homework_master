@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:homework_master/main.dart';
+import 'package:homework_master/service/error_handling_service.dart';
 import 'package:homework_master/view/widget/loading_overlay.dart';
 
 class DialogService {
+  get errorHandlingService => getIt<ErrorHandlingService>();
+
   Future<String?> showNameRegistrationDialog(BuildContext context) async {
     final TextEditingController textController = TextEditingController();
     return await showInputTextDialogBase(
@@ -29,15 +33,22 @@ class DialogService {
         cancelButtonText: 'キャンセル',
         textController: textController,
         handleOKButtonPress: (dialogContext) async {
-          final isSuccess = await LoadingOverlay.of(dialogContext)
-              .during(() => handleEnterRoom(textController.text));
-          if (isSuccess) {
-            if (dialogContext.mounted) {
-              Navigator.of(dialogContext).pop(textController.text);
+          try {
+            final isSuccess = await LoadingOverlay.of(dialogContext)
+                .during(() => handleEnterRoom(textController.text));
+            if (isSuccess) {
+              if (dialogContext.mounted) {
+                Navigator.of(dialogContext).pop(textController.text);
+              }
+            } else {
+              if (dialogContext.mounted) {
+                Navigator.of(dialogContext).pop('');
+              }
             }
-          } else {
+          } catch (e) {
             if (dialogContext.mounted) {
-              Navigator.of(dialogContext).pop('');
+              Navigator.of(dialogContext).pop();
+              errorHandlingService.handleError(e, context);
             }
           }
         },
@@ -54,9 +65,16 @@ class DialogService {
       okButtonText: '作成する',
       cancelButtonText: 'いいえ',
       handleOKButtonPress: (dialogContext) async {
-        final roomID = await LoadingOverlay.of(dialogContext)
-            .during(() => handleMakeRoom());
-        if (dialogContext.mounted) Navigator.of(dialogContext).pop(roomID);
+        try {
+          final roomID = await LoadingOverlay.of(dialogContext)
+              .during(() => handleMakeRoom());
+          if (dialogContext.mounted) Navigator.of(dialogContext).pop(roomID);
+        } catch (e) {
+          if (dialogContext.mounted) {
+            Navigator.of(dialogContext).pop();
+            errorHandlingService.handleError(e, context);
+          }
+        }
       },
       handleCancelButtonPress: (dialogContext) =>
           Navigator.of(dialogContext).pop(''),
@@ -89,8 +107,15 @@ class DialogService {
       okButtonText: 'はい',
       cancelButtonText: 'いいえ',
       handleOKButtonPress: (dialogContext) async {
-        await LoadingOverlay.of(dialogContext).during(() => leaveAction());
-        if (dialogContext.mounted) Navigator.of(dialogContext).pop(true);
+        try {
+          await LoadingOverlay.of(dialogContext).during(() => leaveAction());
+          if (dialogContext.mounted) Navigator.of(dialogContext).pop(true);
+        } catch (e) {
+          if (dialogContext.mounted) {
+            Navigator.of(dialogContext).pop();
+            errorHandlingService.handleError(e, context);
+          }
+        }
       },
       handleCancelButtonPress: (dialogContext) =>
           Navigator.of(dialogContext).pop(false),

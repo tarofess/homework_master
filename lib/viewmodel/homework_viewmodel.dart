@@ -12,12 +12,12 @@ class HomeworkViewModel {
   Future<void> finishedHomework(String roomID) async {
     final playerID = await sharedPreferencesService.getPlayerID();
     final playerName = await sharedPreferencesService.getPlayerName();
-    roomRepositoryService.addResult(roomID, playerID!, playerName!);
+    await roomRepositoryService.addResult(roomID, playerID!, playerName!);
   }
 
   Future<void> undoHomework(String roomID) async {
     final playerID = await sharedPreferencesService.getPlayerID();
-    roomRepositoryService.removeResult(roomID, playerID!);
+    await roomRepositoryService.removeResult(roomID, playerID!);
   }
 
   bool isCreatedHomework(Room? room) {

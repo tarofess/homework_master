@@ -103,8 +103,8 @@ final initializationProvider = FutureProvider<void>((ref) async {
 final getIt = GetIt.instance;
 
 void setupGetIt() {
+  getIt.registerLazySingleton(() => ErrorHandlingService());
   getIt.registerLazySingleton(() => SharedPreferencesService());
   getIt.registerLazySingleton(() => DialogService());
   getIt.registerLazySingleton(() => RoomRepositoryService());
-  getIt.registerLazySingleton(() => ErrorHandlingService());
 }

@@ -164,21 +164,19 @@ class HomeworkView extends HookConsumerWidget {
         '取り消し確認',
         'ひょっとしてまだ終わってなかった？\n宿題の終了を取り消しますか？',
       );
-
       if (!result) {
         return;
       }
 
-      isFinishButtonPressed.value = false;
-
       if (context.mounted) {
         await LoadingOverlay.of(context).during(() => vm.undoHomework(roomID));
+        isFinishButtonPressed.value = false;
+        ref.read(homeworkTimerProvider.notifier).startTimer();
       }
-      ref.read(homeworkTimerProvider.notifier).startTimer();
     } else {
-      isFinishButtonPressed.value = true;
       await LoadingOverlay.of(context)
           .during(() => vm.finishedHomework(roomID));
+      isFinishButtonPressed.value = true;
       ref.read(homeworkTimerProvider.notifier).stopTimer();
     }
   }

@@ -57,14 +57,8 @@ class RoomPreparationView extends ConsumerWidget {
             elevation: 12,
           ),
           onPressed: () async {
-            try {
-              ref.read(ownerCheckProvider.notifier).state = true;
-              await makeRoom(context, ref, vm);
-            } catch (e) {
-              if (context.mounted) {
-                errorHandlingService.handleError(e, context);
-              }
-            }
+            ref.read(ownerCheckProvider.notifier).state = true;
+            await makeRoom(context, ref, vm);
           },
           child: Text('部屋を作る',
               style: Theme.of(context)
@@ -95,14 +89,8 @@ class RoomPreparationView extends ConsumerWidget {
             elevation: 12,
           ),
           onPressed: () async {
-            try {
-              ref.read(ownerCheckProvider.notifier).state = false;
-              await enterWaitingRoom(context, ref, vm);
-            } catch (e) {
-              if (context.mounted) {
-                errorHandlingService.handleError(e, context);
-              }
-            }
+            ref.read(ownerCheckProvider.notifier).state = false;
+            await enterWaitingRoom(context, ref, vm);
           },
           child: Text('入室する',
               style: Theme.of(context)
@@ -134,8 +122,12 @@ class RoomPreparationView extends ConsumerWidget {
       if (context.mounted) {
         context.pushNamed('waiting_view');
       }
-    } else if (vm.isRoomIdNotFound(roomID)) {
-      throw Exception('そのような部屋は見つかりませんでした');
+    } else if (vm.isRoomIdNotFound(roomID) && context.mounted) {
+      dialogService.showErrorDialog(
+        context,
+        'ルームIDが一致しません',
+        'そのような部屋は見つかりませんでした',
+      );
     }
   }
 }

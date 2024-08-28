@@ -39,13 +39,7 @@ class WaitingView extends ConsumerWidget {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () async {
-          try {
-            await handleRoomExit(context, vm, isOwner, roomID);
-          } catch (e) {
-            if (context.mounted) {
-              errorHandlingService.handleError(e, context);
-            }
-          }
+          await handleRoomExit(context, vm, isOwner, roomID);
         },
       ),
       title: Text('ルームID : $roomID'),
