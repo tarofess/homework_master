@@ -33,6 +33,7 @@ class RankingView extends ConsumerWidget {
   AppBar buildAppBar(BuildContext context, WidgetRef ref, String roomID) {
     final vm = ref.watch(rankingViewModelProvider);
     return AppBar(
+      centerTitle: true,
       title: const Text('ランキング'),
       leading: IconButton(
         icon: const Icon(Icons.share),

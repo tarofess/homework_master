@@ -27,6 +27,7 @@ class MyApp extends ConsumerWidget {
     final initialization = ref.watch(initializationProvider);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: initialization.when(
           data: (_) => const AppRouter(),
@@ -82,6 +83,7 @@ class AppRouter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       routerConfig: GoRouterConfig.getRouter(),
       theme: AppTheme.defaultTheme(),
     );

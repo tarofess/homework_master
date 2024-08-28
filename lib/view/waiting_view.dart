@@ -35,6 +35,7 @@ class WaitingView extends ConsumerWidget {
   AppBar buildAppBar(
       BuildContext context, WaitingViewModel vm, bool isOwner, String roomID) {
     return AppBar(
+      centerTitle: true,
       automaticallyImplyLeading: false,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
