@@ -78,25 +78,25 @@ class MyApp extends ConsumerWidget {
   }
 }
 
+// ignore: must_be_immutable
 class AppRouter extends ConsumerWidget {
   final dialogService = getIt<DialogService>();
+  bool isFirstConnection = true;
 
   AppRouter({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<bool>(connectionStatusProvider, (previous, isConnected) async {
+    ref.listen(connectionStatusProvider, (previous, isConnected) async {
+      if (isFirstConnection == true) {
+        isFirstConnection = false;
+        return;
+      }
       if (!isConnected) {
         await dialogService.showErrorDialog(
           context,
           '接続失敗',
           'インターネット接続がありません\n接続状況を確認してみてください',
-        );
-      } else {
-        await dialogService.showErrorDialog(
-          context,
-          '接続完了',
-          'インターネットが接続されました\nアプリをお楽しみください！',
         );
       }
     });
