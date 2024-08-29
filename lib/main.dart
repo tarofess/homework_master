@@ -10,6 +10,7 @@ import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/service/shared_preferences_service.dart';
 import 'package:homework_master/view/widget/app_theme.dart';
 import 'package:homework_master/view/widget/common_async_widget.dart';
+import 'package:homework_master/viewmodel/provider/connection_status_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'firebase_options.dart';
 import 'package:homework_master/go_router_config.dart';
@@ -30,7 +31,7 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: initialization.when(
-          data: (_) => const AppRouter(),
+          data: (_) => AppRouter(),
           error: (error, stackTrace) => showInitializationrErrorMessage(
               context, ref, initializationProvider, error),
           loading: () => CommonAsyncWidget.showLoadingIndicator(),
@@ -77,11 +78,29 @@ class MyApp extends ConsumerWidget {
   }
 }
 
-class AppRouter extends StatelessWidget {
-  const AppRouter({super.key});
+class AppRouter extends ConsumerWidget {
+  final dialogService = getIt<DialogService>();
+
+  AppRouter({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<bool>(connectionStatusProvider, (previous, isConnected) async {
+      if (!isConnected) {
+        await dialogService.showErrorDialog(
+          context,
+          '接続失敗',
+          'インターネット接続がありません\n接続状況を確認してみてください',
+        );
+      } else {
+        await dialogService.showErrorDialog(
+          context,
+          '接続完了',
+          'インターネットが接続されました\nアプリをお楽しみください！',
+        );
+      }
+    });
+
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: GoRouterConfig.getRouter(),
