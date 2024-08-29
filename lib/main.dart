@@ -95,8 +95,8 @@ class AppRouter extends ConsumerWidget {
       if (!isConnected) {
         await dialogService.showErrorDialog(
           context,
-          '接続失敗',
-          'インターネット接続がありません\n接続状況を確認してみてください',
+          '接続不可',
+          'インターネット接続が失われました\n接続状況を確認してみてください',
         );
       }
     });
@@ -115,6 +115,7 @@ Future<void> setupFirebase() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+
     FlutterError.onError = (errorDetails) {
       FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
     };

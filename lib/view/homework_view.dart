@@ -10,6 +10,7 @@ import 'package:homework_master/view/widget/homework_start_animation.dart';
 import 'package:homework_master/view/widget/homework_timer.dart';
 import 'package:homework_master/view/widget/loading_overlay.dart';
 import 'package:homework_master/viewmodel/homework_viewmodel.dart';
+import 'package:homework_master/viewmodel/provider/connection_status_provider.dart';
 import 'package:homework_master/viewmodel/provider/homework_timer_provider.dart';
 import 'package:homework_master/viewmodel/provider/room_provider.dart';
 import 'package:homework_master/viewmodel/provider/roomid_provider.dart';
@@ -35,6 +36,7 @@ class HomeworkView extends HookConsumerWidget {
     final isFinishButtonPressed = useState(false);
     final buttonColor =
         isFinishButtonPressed.value ? Colors.grey : Colors.green[400];
+    final connectionState = ref.watch(connectionStatusProvider);
 
     useEffect(() {
       void animationSequence() async {
@@ -101,7 +103,7 @@ class HomeworkView extends HookConsumerWidget {
                 ),
                 elevation: 12,
               ),
-              onPressed: isEnableFinishButton.value
+              onPressed: isEnableFinishButton.value && connectionState == true
                   ? () async {
                       try {
                         await handleFinishButtonPressed(
