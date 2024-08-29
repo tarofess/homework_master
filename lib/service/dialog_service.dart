@@ -125,36 +125,12 @@ class DialogService {
 
   Future<void> showErrorDialog(
       BuildContext context, String title, String content) async {
-    await showDialog<void>(
+    await showSingleButtonDialogBase(
       context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            title,
-            textAlign: TextAlign.center,
-          ),
-          content: Text(content),
-          actions: [
-            Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.green[500],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text(
-                  'はい',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+      title: title,
+      content: content,
+      buttonText: 'はい',
+      handleButtonPress: () => Navigator.of(context).pop(),
     );
   }
 
@@ -327,6 +303,46 @@ class DialogService {
                   ),
                 ),
               ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> showSingleButtonDialogBase({
+    required BuildContext context,
+    required String title,
+    required String content,
+    required String buttonText,
+    required Function() handleButtonPress,
+  }) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            title,
+            textAlign: TextAlign.center,
+          ),
+          content: Text(content),
+          actions: [
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.green[500],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                onPressed: () => handleButtonPress(),
+                child: Text(
+                  buttonText,
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ),
             ),
           ],
         );
