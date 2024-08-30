@@ -20,17 +20,11 @@ class HomeworkViewModel {
     await roomRepositoryService.removeResult(roomID, playerID!);
   }
 
-  bool isCreatedHomework(Room? room) {
-    return room == null || room.homework == null ? true : false;
-  }
-
   void moveToRankigViewIfAllPlayerFinished(
       Room? room, VoidCallback moveToRankingView) {
-    if (isCreatedHomework(room)) {
-      return;
-    }
-
-    if (room!.homework!.result == null) {
+    if (room == null ||
+        room.homework == null ||
+        room.homework?.result == null) {
       return;
     }
 

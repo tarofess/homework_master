@@ -30,7 +30,7 @@ class PlayerListCard extends StatelessWidget {
         title: Text(
           type == PlayerListCardType.waiting
               ? room.playersList[index].value.name
-              : room.player[room.homework!.resultsList[index].key]!.name,
+              : room.player[room.homework?.resultsList[index].key]?.name ?? '',
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 30,
@@ -40,7 +40,7 @@ class PlayerListCard extends StatelessWidget {
             ? null
             : Text(
                 room.homework?.getFormattedClearTime(
-                        room.homework?.resultsList[index].value!.clearTime) ??
+                        room.homework?.resultsList[index].value.clearTime) ??
                     '',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Colors.black,

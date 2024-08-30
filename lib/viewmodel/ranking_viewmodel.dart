@@ -29,7 +29,11 @@ class RankingViewModel {
 
   Future<void> saveAndShareScreenshot(ui.Image image) async {
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    final pngBytes = byteData!.buffer.asUint8List();
+    final pngBytes = byteData?.buffer.asUint8List();
+
+    if (pngBytes == null) {
+      return;
+    }
 
     final tempDir = await getTemporaryDirectory();
     final file = await File('${tempDir.path}/screenshot.png').create();

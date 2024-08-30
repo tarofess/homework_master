@@ -16,7 +16,10 @@ class Homework with _$Homework {
 }
 
 extension HomeworkExtension on Homework {
-  List<MapEntry<String, Result?>> get resultsList {
+  List<MapEntry<String, Result>> get resultsList {
+    if (result == null) {
+      return [];
+    }
     final entries = result!.entries.toList();
     entries.sort((a, b) => a.value.clearTime.compareTo(b.value.clearTime));
     return entries;
