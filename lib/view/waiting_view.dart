@@ -7,7 +7,6 @@ import 'package:homework_master/service/error_handling_service.dart';
 import 'package:homework_master/service/room_repository_service.dart';
 import 'package:homework_master/view/widget/common_async_widget.dart';
 import 'package:homework_master/view/widget/player_list_card.dart';
-import 'package:homework_master/viewmodel/provider/connection_status_provider.dart';
 import 'package:homework_master/viewmodel/provider/owner_check_provider.dart';
 import 'package:homework_master/viewmodel/provider/roomid_provider.dart';
 import 'package:homework_master/viewmodel/provider/room_provider.dart';
@@ -26,43 +25,38 @@ class WaitingView extends ConsumerWidget {
     final vm = ref.watch(waitingViewModelProvider);
     final isOwner = ref.watch(ownerCheckProvider);
     final roomID = ref.read(roomIDProvider);
-    final connectionState = ref.watch(connectionStatusProvider);
 
     return Scaffold(
-      appBar: buildAppBar(context, vm, isOwner, roomID, connectionState),
+      appBar: buildAppBar(context, vm, isOwner, roomID),
       body: buildBody(context, vm, ref, roomID),
     );
   }
 
-  AppBar buildAppBar(BuildContext context, WaitingViewModel vm, bool isOwner,
-      String roomID, bool connectionState) {
+  AppBar buildAppBar(
+      BuildContext context, WaitingViewModel vm, bool isOwner, String roomID) {
     return AppBar(
       centerTitle: true,
       automaticallyImplyLeading: false,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
-        onPressed: connectionState == true
-            ? () async {
-                await handleRoomExit(context, vm, isOwner, roomID);
-              }
-            : null,
+        onPressed: () async {
+          await handleRoomExit(context, vm, isOwner, roomID);
+        },
       ),
       title: Text('ルームID : $roomID'),
       actions: [
         if (isOwner)
           IconButton(
             icon: const Icon(Icons.check_circle_outline),
-            onPressed: connectionState == true
-                ? () async {
-                    try {
-                      await handleRoomReadyConfirmation(context, vm, roomID);
-                    } catch (e) {
-                      if (context.mounted) {
-                        errorHandlingService.handleError(e, context);
-                      }
-                    }
-                  }
-                : null,
+            onPressed: () async {
+              try {
+                await handleRoomReadyConfirmation(context, vm, roomID);
+              } catch (e) {
+                if (context.mounted) {
+                  errorHandlingService.handleError(e, context);
+                }
+              }
+            },
           ),
       ],
     );

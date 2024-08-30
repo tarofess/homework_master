@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:homework_master/main.dart';
 import 'package:homework_master/service/dialog_service.dart';
 import 'package:homework_master/service/error_handling_service.dart';
-import 'package:homework_master/viewmodel/provider/connection_status_provider.dart';
 import 'package:homework_master/viewmodel/provider/owner_check_provider.dart';
 import 'package:homework_master/viewmodel/provider/roomid_provider.dart';
 import 'package:homework_master/viewmodel/room_preparation_viewmodel.dart';
@@ -27,21 +26,19 @@ class RoomPreparationView extends ConsumerWidget {
 
   Widget buildBody(
       BuildContext context, WidgetRef ref, RoomPreparationViewModel vm) {
-    final connectionState = ref.watch(connectionStatusProvider);
-
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          buildMakeRoomButton(context, ref, vm, connectionState),
-          buildEnterRoomButton(context, ref, vm, connectionState),
+          buildMakeRoomButton(context, ref, vm),
+          buildEnterRoomButton(context, ref, vm),
         ],
       ),
     );
   }
 
-  Widget buildMakeRoomButton(BuildContext context, WidgetRef ref,
-      RoomPreparationViewModel vm, bool connectionState) {
+  Widget buildMakeRoomButton(
+      BuildContext context, WidgetRef ref, RoomPreparationViewModel vm) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.only(
@@ -59,12 +56,10 @@ class RoomPreparationView extends ConsumerWidget {
             ),
             elevation: 12,
           ),
-          onPressed: connectionState == true
-              ? () async {
-                  ref.read(ownerCheckProvider.notifier).state = true;
-                  await makeRoom(context, ref, vm);
-                }
-              : null,
+          onPressed: () async {
+            ref.read(ownerCheckProvider.notifier).state = true;
+            await makeRoom(context, ref, vm);
+          },
           child: Text('部屋を作る',
               style: Theme.of(context)
                   .textTheme
@@ -75,8 +70,8 @@ class RoomPreparationView extends ConsumerWidget {
     );
   }
 
-  Widget buildEnterRoomButton(BuildContext context, WidgetRef ref,
-      RoomPreparationViewModel vm, connectionState) {
+  Widget buildEnterRoomButton(
+      BuildContext context, WidgetRef ref, RoomPreparationViewModel vm) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.only(left: 40.0, right: 40.0, bottom: 40.0),
@@ -93,12 +88,10 @@ class RoomPreparationView extends ConsumerWidget {
             ),
             elevation: 12,
           ),
-          onPressed: connectionState == true
-              ? () async {
-                  ref.read(ownerCheckProvider.notifier).state = false;
-                  await enterWaitingRoom(context, ref, vm);
-                }
-              : null,
+          onPressed: () async {
+            ref.read(ownerCheckProvider.notifier).state = false;
+            await enterWaitingRoom(context, ref, vm);
+          },
           child: Text('入室する',
               style: Theme.of(context)
                   .textTheme

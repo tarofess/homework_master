@@ -81,31 +81,38 @@ class MyApp extends ConsumerWidget {
 // ignore: must_be_immutable
 class AppRouter extends ConsumerWidget {
   final dialogService = getIt<DialogService>();
+  final errorHandlingService = getIt<ErrorHandlingService>();
   bool isFirstConnection = true;
+  bool isNetworkErrorDialogShowing = false;
 
   AppRouter({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(connectionStatusProvider, (previous, isConnected) async {
-      if (isFirstConnection == true) {
-        isFirstConnection = false;
-        return;
-      }
-      if (!isConnected) {
-        await dialogService.showErrorDialog(
-          context,
-          '接続不可',
-          'インターネット接続が失われました\n接続状況を確認してみてください',
-        );
-      }
-    });
+    listenToConnectionStatus(context, ref);
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: GoRouterConfig.getRouter(),
       theme: AppTheme.defaultTheme(),
     );
+  }
+
+  void listenToConnectionStatus(BuildContext context, WidgetRef ref) {
+    ref.listen(connectionStatusProvider, (previous, isConnected) async {
+      if (isFirstConnection == true) {
+        isFirstConnection = false;
+        return;
+      }
+
+      if (!isConnected) {
+        dialogService.showNetworkErrorDialog(context);
+        isNetworkErrorDialogShowing = true;
+      } else if (isConnected && isNetworkErrorDialogShowing) {
+        isNetworkErrorDialogShowing = false;
+        Navigator.of(context).pop();
+      }
+    });
   }
 }
 

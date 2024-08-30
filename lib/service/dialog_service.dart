@@ -130,7 +130,30 @@ class DialogService {
       title: title,
       content: content,
       buttonText: 'はい',
-      handleButtonPress: () => Navigator.of(context).pop(),
+      handleButtonPress: (dialogContext) => Navigator.of(dialogContext).pop(),
+    );
+  }
+
+  Future<void> showNetworkErrorDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return const AlertDialog(
+          title: Text(
+            'ネットワークエラー',
+            textAlign: TextAlign.center,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('インターネット接続が失われました\n接続状況を確認してみてください'),
+              SizedBox(height: 16),
+              CircularProgressIndicator(),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -315,7 +338,7 @@ class DialogService {
     required String title,
     required String content,
     required String buttonText,
-    required Function() handleButtonPress,
+    required Function(BuildContext dialogContext) handleButtonPress,
   }) async {
     await showDialog(
       context: context,
@@ -337,7 +360,7 @@ class DialogService {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                onPressed: () => handleButtonPress(),
+                onPressed: () => handleButtonPress(dialogContext),
                 child: Text(
                   buttonText,
                   style: const TextStyle(fontSize: 18),
