@@ -21,7 +21,7 @@ Homework _$HomeworkFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Homework {
   int get startTime => throw _privateConstructorUsedError;
-  Map<String, Result> get result => throw _privateConstructorUsedError;
+  Map<String, Result>? get result => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +34,7 @@ abstract class $HomeworkCopyWith<$Res> {
   factory $HomeworkCopyWith(Homework value, $Res Function(Homework) then) =
       _$HomeworkCopyWithImpl<$Res, Homework>;
   @useResult
-  $Res call({int startTime, Map<String, Result> result});
+  $Res call({int startTime, Map<String, Result>? result});
 }
 
 /// @nodoc
@@ -51,17 +51,17 @@ class _$HomeworkCopyWithImpl<$Res, $Val extends Homework>
   @override
   $Res call({
     Object? startTime = null,
-    Object? result = null,
+    Object? result = freezed,
   }) {
     return _then(_value.copyWith(
       startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
               as int,
-      result: null == result
+      result: freezed == result
           ? _value.result
           : result // ignore: cast_nullable_to_non_nullable
-              as Map<String, Result>,
+              as Map<String, Result>?,
     ) as $Val);
   }
 }
@@ -74,7 +74,7 @@ abstract class _$$HomeworkImplCopyWith<$Res>
       __$$HomeworkImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int startTime, Map<String, Result> result});
+  $Res call({int startTime, Map<String, Result>? result});
 }
 
 /// @nodoc
@@ -89,17 +89,17 @@ class __$$HomeworkImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? startTime = null,
-    Object? result = null,
+    Object? result = freezed,
   }) {
     return _then(_$HomeworkImpl(
       startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
               as int,
-      result: null == result
+      result: freezed == result
           ? _value._result
           : result // ignore: cast_nullable_to_non_nullable
-              as Map<String, Result>,
+              as Map<String, Result>?,
     ));
   }
 }
@@ -108,7 +108,7 @@ class __$$HomeworkImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$HomeworkImpl implements _Homework {
   const _$HomeworkImpl(
-      {required this.startTime, required final Map<String, Result> result})
+      {required this.startTime, required final Map<String, Result>? result})
       : _result = result;
 
   factory _$HomeworkImpl.fromJson(Map<String, dynamic> json) =>
@@ -116,12 +116,14 @@ class _$HomeworkImpl implements _Homework {
 
   @override
   final int startTime;
-  final Map<String, Result> _result;
+  final Map<String, Result>? _result;
   @override
-  Map<String, Result> get result {
+  Map<String, Result>? get result {
+    final value = _result;
+    if (value == null) return null;
     if (_result is EqualUnmodifiableMapView) return _result;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_result);
+    return EqualUnmodifiableMapView(value);
   }
 
   @override
@@ -161,7 +163,7 @@ class _$HomeworkImpl implements _Homework {
 abstract class _Homework implements Homework {
   const factory _Homework(
       {required final int startTime,
-      required final Map<String, Result> result}) = _$HomeworkImpl;
+      required final Map<String, Result>? result}) = _$HomeworkImpl;
 
   factory _Homework.fromJson(Map<String, dynamic> json) =
       _$HomeworkImpl.fromJson;
@@ -169,7 +171,7 @@ abstract class _Homework implements Homework {
   @override
   int get startTime;
   @override
-  Map<String, Result> get result;
+  Map<String, Result>? get result;
   @override
   @JsonKey(ignore: true)
   _$$HomeworkImplCopyWith<_$HomeworkImpl> get copyWith =>

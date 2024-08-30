@@ -9,7 +9,7 @@ part of 'homework.dart';
 _$HomeworkImpl _$$HomeworkImplFromJson(Map<String, dynamic> json) =>
     _$HomeworkImpl(
       startTime: (json['startTime'] as num).toInt(),
-      result: (json['result'] as Map<String, dynamic>).map(
+      result: (json['result'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, Result.fromJson(e as Map<String, dynamic>)),
       ),
     );

@@ -30,8 +30,12 @@ class HomeworkViewModel {
       return;
     }
 
-    bool allKeysContained = room!.player.keys
-        .every((key) => room.homework!.result.containsKey(key));
+    if (room!.homework!.result == null) {
+      return;
+    }
+
+    bool allKeysContained = room.player.keys
+        .every((key) => room.homework!.result!.containsKey(key));
 
     if (allKeysContained) {
       moveToRankingView();

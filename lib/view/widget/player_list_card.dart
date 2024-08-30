@@ -40,7 +40,7 @@ class PlayerListCard extends StatelessWidget {
             ? null
             : Text(
                 room.homework?.getFormattedClearTime(
-                        room.homework?.resultsList[index].value.clearTime) ??
+                        room.homework?.resultsList[index].value!.clearTime) ??
                     '',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Colors.black,
