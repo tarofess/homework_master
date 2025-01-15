@@ -1,16 +1,18 @@
-# homework_master
+# 宿題マスター
 
-A new Flutter project.
+## 概要
+友達と競争をして宿題を終わらせるための小学生向けアプリです。  
+各自自宅にいてもオンラインゲームのようにリアルタイムで宿題の終了を競えます。  
+宿題が早く終わった順でランキング表が表示され、それを親などに共有することもできます。  
 
-## Getting Started
+## 要件
 
-This project is a starting point for a Flutter application.
+### OS
+iOS
+Android
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 開発環境
+|  | Tool | Version |
+| --- | --- | --- |
+| フレームワーク | Flutter | 3.24.5 |
+| プログラミング言語 | Dart | 3.6.0 |
